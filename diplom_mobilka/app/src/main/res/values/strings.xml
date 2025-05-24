@@ -1,0 +1,74 @@
+<resources>
+    <string name="app_name">kursachh</string>
+    <string name="title_dashboard">Dashboard</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome!"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="reg">"Регистрация"</string>
+    <string name="zareg">"Зарегистрироваться"</string>
+    <string name="enter">"Войти"</string>
+    <string name="passwordText">"Пароль"</string>
+    <string name="passwordNextText">"Новый пароль"</string>
+    <string name="login">"Логин"</string>
+    <string name="createProfile">"Создать учетную запись"</string>
+    <string name="enterProfile">"Войти в учетную запись"</string>
+    <string name="author">"Авторизация"</string>
+
+    <string name="name">"Имя"</string>
+    <string name="surname">"Фамилия"</string>
+
+    <string name="genderText">"Выберете пол:"</string>
+    <string name="ageText">"Введите дату рождения:"</string>
+    <string name="heightText">"Введите рост:"</string>
+    <string name="weightText">"Введите вес:"</string>
+    <string name="lifestyleText">"Выберете образ жизни:"</string>
+
+    <string name="reciepsText">"Рецепты"</string>
+
+    <string name="preferencesFoodText">"Выберете предпочтения в еде:"</string>
+    <string name="preference1Text">"Веган"</string>
+    <string name="preference2Text">"Мясо "</string>
+    <string name="preference3Text">"Рыба "</string>
+    <string name="preference4Text">"Птица"</string>
+    <string name="preference5Text">"Грибы"</string>
+    <string name="allergy1Text">"Морепродукты"</string>
+    <string name="allergy2Text">"Цитрусовые"</string>
+    <string name="allergy3Text">"Лактоза"</string>
+    <string name="allergy4Text">"Сахар"</string>
+    <string name="allergy5Text">"Ягоды"</string>
+    <string name="allergy6Text">"Колбасные изделия"</string>
+    <string name="allergy7Text">"Арахис"</string>
+    <string name="allergicReactionText">"Выберете ваши аллергии:"</string>
+
+    <string name="refactorProfileButtonText">"Изменить профиль"</string>
+    <string name="loginUserProfileText">"Логин:"</string>
+    <string name="nameUserProfileText">"Имя:"</string>
+    <string name="birthdayUserProfileText">"Дата рождения:"</string> <!-- вывод только дня и месяца -->
+    <string name="refactorWeightUserButtonText">"Мой вес         >"</string>
+    <string name="resepsUsersButtonText">"Мои рецепты        >"</string>
+    <string name="usersResepsText">"Созданные рецепты"</string>
+    <string name="settingsButtonText">"Настройки"</string>
+    <string name="refactorProfileText">"Изменение данных:"</string>
+    <string name="refactorWeightText">"Мой вес:"</string>
+    <string name="yourResepsText">"Добавленные рецепты:"</string>
+    <string name="supportButtonText">"Поддержка"</string>
+    <string name="saveRefactorText">"Сохранить изменения"</string>
+    <string name="heightRefactorText">"Рост:"</string>
+    <string name="refactorPasswordText">"Изменение пароля:"</string>
+    <string name="achievementsButtonText">"Достижения (скоро)"</string>
+
+
+    <string name="makingMealsText">"Добавление приемов пищи:"</string>
+    <string name="breakfastString">"Завтрак"</string>
+    <string name="lunchString">"Обед"</string>
+    <string name="dinnerString">"Ужин"</string>
+    <string name="snackString">"Полдник"</string>
+    <string name="waterString">"Вода"</string>
+    <string name="acrivityString">"Активность/упражнение"</string>
+</resources>

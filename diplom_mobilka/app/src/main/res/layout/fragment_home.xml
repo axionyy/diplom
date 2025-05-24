@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.home.HomeFragment"
+    android:paddingTop="30dp" >
+
+    <TextView
+        android:id="@+id/textrecepts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_margin="20dp"
+        android:text="@string/reciepsText"
+        android:textAlignment="center"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
+        android:id="@+id/scroll1"
+        android:layout_width="370dp"
+        android:layout_height="0dp"
+
+        android:background="@color/white_grey"
+        android:layout_marginBottom="50dp"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textrecepts"
+        app:layout_constraintVertical_bias="0.0" >
+
+        <LinearLayout
+            android:id="@+id/general_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp">
+
+
+            <LinearLayout
+                android:id="@+id/resept1"
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/ovsanoblinImage"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_margin="10dp"
+                    android:src="@drawable/ovsanoblin"
+                    tools:layout_editor_absoluteX="-12dp"
+                    tools:layout_editor_absoluteY="-21dp" >
+                </ImageView>
+
+                <LinearLayout
+                    android:id="@+id/ingredienty1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="200dp"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:id="@+id/nachalo_resept1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Состав/ингредиенты:"
+                        android:textSize="20sp">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/sostav1.1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="· Овсяные хлопья - 3 ст.л."
+                        android:textSize="15sp">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/sostav1.2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="· Молоко - 30 мл."
+                        android:textSize="15sp">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/sostav1.3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="· Яйца - 2 шт."
+                        android:textSize="15sp">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/sostav1.4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="· Соль - по вкусу"
+                        android:textSize="15sp">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/sostav1.5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="· Моцарелла - 30 гр."
+                        android:textSize="15sp">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/sostav1.6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="· Огурцы - 0.5 шт."
+                        android:textSize="15sp">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/sostav1.7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="· Салат айсберг - 50 гр."
+                        android:textSize="15sp">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/sostav1.8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="· Растительное масло - 0.5 ст.л."
+                        android:textSize="15sp">
+                    </TextView>
+
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/resept2"
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:id="@+id/bananImage"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_margin="10dp"
+                    android:src="@drawable/tvorog_banan"
+                    tools:layout_editor_absoluteX="-12dp"
+                    tools:layout_editor_absoluteY="-21dp" >
+                </ImageView>
+
+                <LinearLayout
+                    android:id="@+id/ingredienty2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:id="@+id/nachalo_resept2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Состав/ингредиенты:"
+                        android:textSize="20sp">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/sostav2.1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="·Творог - 300 гр."
+                        android:textSize="15sp">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/sostav2.2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="· Бананы - 2 шт."
+                        android:textSize="15sp">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/sostav2.3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="· Мёд - 1 ч.л."
+                        android:textSize="15sp">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/sostav2.4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="· Ванилин - 1 гр."
+                        android:textSize="15sp">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/sostav2.5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="· Сметана - 50 гр."
+                        android:textSize="15sp">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/sostav2.6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="· Грецкие орехи - 1 шт."
+                        android:textSize="15sp">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/sostav2.7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="· Готовое песочное печенье - 10 гр."
+                        android:textSize="15sp">
+                    </TextView>
+
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/resept3"
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:id="@+id/kapusteImage"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_margin="10dp"
+                    android:src="@drawable/kapustnye_kotlety"
+                    tools:layout_editor_absoluteX="-12dp"
+                    tools:layout_editor_absoluteY="-21dp" >
+                </ImageView>
+
+                <LinearLayout
+                    android:id="@+id/ingredienty3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:id="@+id/nachalo_resept3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Состав/ингредиенты:"
+                        android:textSize="20sp">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/sostav3.1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="·Капуста - 500 гр."
+                        android:textSize="15sp">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/sostav3.2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="· Куриные яйца - 2 шт."
+                        android:textSize="15sp">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/sostav3.3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="· Манка - 50 гр."
+                        android:textSize="15sp">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/sostav3.4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="· Укроп - 10 гр."
+                        android:textSize="15sp">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/sostav3.5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="· Соль - по вкусу"
+                        android:textSize="15sp">
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/sostav3.6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="· Растительное масло - 3 ст.л."
+                        android:textSize="15sp">
+                    </TextView>
+
+                </LinearLayout>
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

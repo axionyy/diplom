@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.profile.ProfileFragment">
+
+    <ImageView
+        android:id="@+id/exitImageButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginTop="5dp"
+
+        android:src="@drawable/baseline_exit_to_app_24"
+
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+
+    <ImageView
+        android:id="@+id/iconProfileImage"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginStart="50dp"
+
+        android:src="@drawable/ic_profile"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <Button
+        android:id="@+id/refactorProfileButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+
+        android:text="@string/refactorProfileButtonText"
+        android:backgroundTint="@color/blue"
+        android:textColor="@color/black"
+        android:textAllCaps="false"
+        android:textSize="15sp"
+
+        app:layout_constraintBottom_toBottomOf="@+id/iconProfileImage"
+        app:layout_constraintLeft_toRightOf="@+id/iconProfileImage"/>
+
+
+    <RelativeLayout
+        android:id="@+id/loginUserProfile"
+        android:layout_width="350dp"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:layout_marginTop="15dp"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iconProfileImage">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+
+            android:text="@string/loginUserProfileText"
+            android:textSize="20sp"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/loginUser"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+
+            android:text="axiony"
+            android:textColor="@color/orange"
+            android:textSize="20sp"/>
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/nameUserProfile"
+        android:layout_width="350dp"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginUserProfile">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+
+            android:text="@string/nameUserProfileText"
+            android:textSize="20sp"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/nameUser"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+
+            android:text="Aksinya"
+            android:textColor="@color/orange"
+            android:textSize="20sp"/>
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/birthdayUserProfile"
+        android:layout_width="350dp"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nameUserProfile">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+
+            android:text="@string/birthdayUserProfileText"
+            android:textSize="20sp"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/birthdayUser"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+
+            android:text="06.02"
+            android:textColor="@color/orange"
+            android:textSize="20sp"/>
+    </RelativeLayout>
+
+
+    <Button
+        android:id="@+id/refactorWeightUserButton"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="30dp"
+
+        android:backgroundTint="@color/blue"
+        android:text="@string/refactorWeightUserButtonText"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/birthdayUserProfile"/>
+
+    <Button
+        android:id="@+id/resepsUsersButton"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="30dp"
+
+        android:backgroundTint="@color/blue"
+        android:text="@string/resepsUsersButtonText"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/refactorWeightUserButton"/>
+
+
+    <Button
+        android:id="@+id/settingsButton"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+
+        android:backgroundTint="@color/blue"
+        android:text="@string/settingsButtonText"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/resepsUsersButton"/>
+
+
+    <Button
+        android:id="@+id/supportButton"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+
+        android:backgroundTint="@color/gray"
+        android:text="@string/supportButtonText"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settingsButton"/>
+
+
+    <Button
+        android:id="@+id/achievementsButton"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+
+        android:backgroundTint="@color/gray"
+        android:text="@string/achievementsButtonText"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/supportButton"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/baseline_home_24"
+        android:title="Главная" />
+
+    <item
+        android:id="@+id/navigation_diary"
+        android:icon="@drawable/baseline_restaurant_24"
+        android:title="Дневник" />
+
+    <item
+        android:id="@+id/navigation_stat"
+        android:icon="@drawable/baseline_stacked_bar_chart_24"
+        android:title="Статистика" />
+
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/baseline_person_24"
+        android:title="Профиль" />
+
+
+</menu>

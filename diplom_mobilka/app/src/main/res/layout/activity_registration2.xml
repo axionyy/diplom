@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RegistrationActivity2" >
+
+    <ImageView
+        android:id="@+id/imageBack1"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="10dp"
+
+        android:src="@drawable/baseline_arrow_back_ios_new_24"
+        android:onClick="RegistrationBack1"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+
+    <TextView
+        android:id="@+id/registrationText2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+
+        android:text="@string/reg"
+        android:textSize="25sp"
+        android:textColor="@color/black"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/selectGenderText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+
+        android:text="@string/genderText"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/registrationText2" />
+
+    <ImageView
+        android:id="@+id/imageFemale"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="10dp"
+
+        android:src="@drawable/female"
+
+        app:layout_constraintRight_toLeftOf="@+id/imageMale"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/selectGenderText" />
+
+    <ImageView
+        android:id="@+id/imageMale"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="10dp"
+
+        android:src="@drawable/male"
+
+        app:layout_constraintLeft_toRightOf="@+id/imageFemale"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/selectGenderText" />
+
+
+    <RadioGroup
+        android:id="@+id/radioGroupGender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageFemale">
+
+        <RadioButton
+            android:id="@+id/radioFemale"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="100dp" />
+
+        <RadioButton
+            android:id="@+id/radioMale"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="20dp" />
+    </RadioGroup>
+
+
+    <TextView
+        android:id="@+id/inputAgeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+
+        android:text="@string/ageText"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroupGender"/>
+
+    <TextView
+        android:id="@+id/idAgeValueText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+
+        android:textSize="20sp"
+        android:textColor="@color/black"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inputAgeText"/>
+
+    <ImageButton
+        android:id="@+id/idSelectAgeButton"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+
+        android:src="@drawable/baseline_calendar_month_24"
+        android:backgroundTint="@color/light_green"
+
+        app:layout_constraintLeft_toRightOf="@+id/idAgeValueText"
+        app:layout_constraintTop_toBottomOf="@+id/inputAgeText" />
+
+    <TextView
+        android:id="@+id/inputHeightText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+
+        android:text="@string/heightText"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/idAgeValueText"/>
+
+    <TextView
+        android:id="@+id/seekBarHeightValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+
+        android:textSize="20sp"
+        android:textColor="@color/black"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inputHeightText"/>
+
+    <SeekBar
+        android:id="@+id/seekBarHeight"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+
+        android:progress="165"
+        android:min="130"
+        android:max="210"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/seekBarHeightValue"/>
+
+
+    <TextView
+        android:id="@+id/inputWeightText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+
+        android:text="@string/weightText"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/seekBarHeight"/>
+
+    <TextView
+        android:id="@+id/seekBarWeightValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+
+        android:textSize="20sp"
+        android:textColor="@color/black"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inputWeightText"/>
+
+    <SeekBar
+        android:id="@+id/seekBarWeight"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+
+        android:progress="65"
+        android:min="40"
+        android:max="150"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/seekBarWeightValue"/>
+
+    <Button
+        android:id="@+id/enterProfileRegistration"
+        android:layout_width="350dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="50dp"
+
+        android:backgroundTint="@color/blue"
+        android:text="@string/zareg"
+        android:textAllCaps="false"
+        android:textSize="25sp"
+        android:textColor="@color/black"
+        android:onClick="ReturnAutorization"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

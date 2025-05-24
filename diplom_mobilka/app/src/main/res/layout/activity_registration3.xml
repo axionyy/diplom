@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RegistrationActivity3">
+
+    <ImageView
+        android:id="@+id/imageBack2"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="10dp"
+
+        android:src="@drawable/baseline_arrow_back_ios_new_24"
+        android:onClick="RegistrationBack2"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+
+    <TextView
+        android:id="@+id/registrationText3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+
+        android:text="@string/reg"
+        android:textSize="25sp"
+        android:textColor="@color/black"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/preferencesFood"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+
+        android:text="@string/preferencesFoodText"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/registrationText3"/>
+
+    <RelativeLayout
+        android:id="@+id/preferencesFoodLinear1"
+        android:layout_width="300dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/preferencesFood" >
+
+        <TextView
+            android:id="@+id/preference1"
+            android:layout_width="300dp"
+            android:layout_height="25dp"
+            android:layout_alignParentStart="true"
+
+            android:text="@string/preference1Text"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <CheckBox
+            android:id="@+id/preferenceCheck1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/preferencesFoodLinear2"
+        android:layout_width="300dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/preferencesFoodLinear1" >
+
+        <TextView
+            android:id="@+id/preference2"
+            android:layout_width="300dp"
+            android:layout_height="25dp"
+            android:layout_alignParentStart="true"
+
+            android:text="@string/preference2Text"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <CheckBox
+            android:id="@+id/preferenceCheck2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/preferencesFoodLinear3"
+        android:layout_width="300dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/preferencesFoodLinear2" >
+
+        <TextView
+            android:id="@+id/preference3"
+            android:layout_width="300dp"
+            android:layout_height="25dp"
+            android:layout_alignParentStart="true"
+
+            android:text="@string/preference3Text"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <CheckBox
+            android:id="@+id/preferenceCheck3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/preferencesFoodLinear4"
+        android:layout_width="300dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/preferencesFoodLinear3" >
+
+        <TextView
+            android:id="@+id/preference4"
+            android:layout_width="300dp"
+            android:layout_height="25dp"
+            android:layout_alignParentStart="true"
+
+            android:text="@string/preference4Text"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <CheckBox
+            android:id="@+id/preferenceCheck4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/preferencesFoodLinear5"
+        android:layout_width="300dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/preferencesFoodLinear4" >
+
+        <TextView
+            android:id="@+id/preference5"
+            android:layout_width="300dp"
+            android:layout_height="25dp"
+            android:layout_alignParentStart="true"
+
+            android:text="@string/preference5Text"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <CheckBox
+            android:id="@+id/preferenceCheck5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/allergicReaction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+
+        android:text="@string/allergicReactionText"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/preferencesFoodLinear5"/>
+
+    <RelativeLayout
+        android:id="@+id/allergicReactionLinear1"
+        android:layout_width="300dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="10dp"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/allergicReaction" >
+
+        <TextView
+            android:id="@+id/allergy1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+
+            android:text="@string/allergy1Text"
+            android:textSize="20sp"
+            android:textColor="@color/black" />
+
+        <CheckBox
+            android:id="@+id/allergyCheck1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/allergicReactionLinear2"
+        android:layout_width="300dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/allergicReactionLinear1" >
+
+        <TextView
+            android:id="@+id/allergy2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+
+            android:text="@string/allergy2Text"
+            android:textSize="20sp"
+            android:textColor="@color/black" />
+
+        <CheckBox
+            android:id="@+id/allergyCheck2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/allergicReactionLinear3"
+        android:layout_width="300dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/allergicReactionLinear2" >
+
+        <TextView
+            android:id="@+id/allergy3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+
+            android:text="@string/allergy3Text"
+            android:textSize="20sp"
+            android:textColor="@color/black" />
+
+        <CheckBox
+            android:id="@+id/allergyCheck3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/allergicReactionLinear4"
+        android:layout_width="300dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/allergicReactionLinear3" >
+
+        <TextView
+            android:id="@+id/allergy4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+
+            android:text="@string/allergy4Text"
+            android:textSize="20sp"
+            android:textColor="@color/black" />
+
+        <CheckBox
+            android:id="@+id/allergyCheck4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/allergicReactionLinear5"
+        android:layout_width="300dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/allergicReactionLinear4" >
+
+        <TextView
+            android:id="@+id/allergy5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+
+            android:text="@string/allergy5Text"
+            android:textSize="20sp"
+            android:textColor="@color/black" />
+
+        <CheckBox
+            android:id="@+id/allergyCheck5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/allergicReactionLinear6"
+        android:layout_width="300dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/allergicReactionLinear5" >
+
+        <TextView
+            android:id="@+id/allergy6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+
+            android:text="@string/allergy6Text"
+            android:textSize="20sp"
+            android:textColor="@color/black" />
+
+        <CheckBox
+            android:id="@+id/allergyCheck6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/allergicReactionLinear7"
+        android:layout_width="300dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/allergicReactionLinear6" >
+
+        <TextView
+            android:id="@+id/allergy7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+
+            android:text="@string/allergy7Text"
+            android:textSize="20sp"
+            android:textColor="@color/black" />
+
+        <CheckBox
+            android:id="@+id/allergyCheck7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+
+
+    <Button
+        android:id="@+id/enterProfileRegistration"
+        android:layout_width="350dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="20dp"
+
+        android:backgroundTint="@color/blue"
+        android:text="@string/zareg"
+        android:textAllCaps="false"
+        android:textSize="25sp"
+        android:textColor="@color/black"
+        android:onClick="ReturnAutorization"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
