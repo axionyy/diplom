@@ -21,9 +21,6 @@
             android:name=".RegistrationActivity2"
             android:exported="false"/>
         <activity
-            android:name=".RegistrationActivity3"
-            android:exported="false"/>
-        <activity
             android:name=".NavigationRun"
             android:exported="false"/>
         <activity

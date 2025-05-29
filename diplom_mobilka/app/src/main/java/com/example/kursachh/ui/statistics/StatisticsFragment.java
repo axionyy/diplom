@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.kursachh.R;
 import com.example.kursachh.databinding.FragmentStatisticsBinding;
 
 public class StatisticsFragment extends Fragment {
@@ -24,8 +25,12 @@ public class StatisticsFragment extends Fragment {
         binding = FragmentStatisticsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textStatistics;
-        statisticsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        // Set the text for the TextViews in the layout
+        binding.IMTText.setText(getString(R.string.IMT_text_statistic));
+        binding.waterNorm.setText(getString(R.string.water_norm_text_statistic));
+        binding.numberIMT.setText("Норма");
+        binding.numberWater.setText("1400 мл");
+
         return root;
     }
 

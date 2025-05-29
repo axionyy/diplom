@@ -26,7 +26,7 @@
         android:id="@+id/waterAdding"
         android:layout_width="350dp"
         android:layout_height="70dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="30dp"
         android:orientation="horizontal"
 
         android:text="@string/waterString"
@@ -44,7 +44,7 @@
         android:id="@+id/breakfastAdding"
         android:layout_width="350dp"
         android:layout_height="70dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="25dp"
         android:orientation="horizontal"
         android:background="@color/green"
 
@@ -76,7 +76,7 @@
         android:id="@+id/lunchAdding"
         android:layout_width="350dp"
         android:layout_height="70dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="25dp"
         android:orientation="horizontal"
         android:background="@color/green"
 
@@ -108,7 +108,7 @@
         android:id="@+id/dinnerAdding"
         android:layout_width="350dp"
         android:layout_height="70dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="25dp"
         android:orientation="horizontal"
         android:background="@color/green"
 
@@ -140,7 +140,7 @@
         android:id="@+id/snackAdding"
         android:layout_width="350dp"
         android:layout_height="70dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="25dp"
         android:orientation="horizontal"
         android:background="@color/green"
 
@@ -168,21 +168,5 @@
             android:src="@drawable/baseline_add_24" />
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/activityAdding"
-        android:layout_width="350dp"
-        android:layout_height="70dp"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-
-        android:text="@string/acrivityString"
-        android:textAllCaps="false"
-        android:textSize="20sp"
-        android:textColor="@color/black"
-        android:backgroundTint="@color/orange"
-
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/snackAdding" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

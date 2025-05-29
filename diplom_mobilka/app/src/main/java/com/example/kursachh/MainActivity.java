@@ -61,26 +61,31 @@ public class MainActivity extends AppCompatActivity {
                 call.enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
-                        if (response.isSuccessful()){
+                        if (response.isSuccessful() && response.body() != null) {
                             User user = response.body();
+                            Log.d("Authorization", "User data received - ID: " + user.id + ", Name: " + user.name);
+
+                            // Сохраняем данные
                             authManager.setLoggedIn(true);
-                            dataManager.saveData(user.toString()); // Сохраняем данные пользователя
-                            Log.d("Authorization", "Login successful");
-                            Toast.makeText(MainActivity.this, "Вы вошли в аккаунт!", Toast.LENGTH_SHORT).show();
+                            authManager.saveUserId(user.id);
+                            dataManager.saveData(user.toString());
+
+                            Log.d("Authorization", "Saved user ID: " + authManager.getUserId()); // Проверка сохранения
+
+                            // Переход на главный экран
                             Intent intent = new Intent(MainActivity.this, NavigationRun.class);
                             startActivity(intent);
                             finish();
-                        }
-                        else {
-                            Log.e("Authorization", "Login failed with response code: " + response.code());
-                            Toast.makeText(MainActivity.this, "Неверный логин или пароль", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Log.e("Authorization", "Login failed: " + response.code());
+                            Toast.makeText(MainActivity.this, "Ошибка авторизации", Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<User> call, Throwable t) {
-                        Log.e("Authorization", "Network error: " + t.getMessage());
-                        Toast.makeText(MainActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.e("Authorization", "Network error", t);
+                        Toast.makeText(MainActivity.this, "Ошибка сети", Toast.LENGTH_SHORT).show();
                     }
                 });
             }

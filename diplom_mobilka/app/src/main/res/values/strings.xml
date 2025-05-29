@@ -71,4 +71,9 @@
     <string name="snackString">"Полдник"</string>
     <string name="waterString">"Вода"</string>
     <string name="acrivityString">"Активность/упражнение"</string>
+
+
+    <string name="IMT_text_statistic">"Индекс массы тела (ИМТ):"</string>
+    <string name="water_norm_text_statistic">"Норма потребления воды:"</string>
+
 </resources>

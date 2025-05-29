@@ -8,20 +8,156 @@
     tools:context=".ui.statistics.StatisticsFragment">
 
     <TextView
-        android:id="@+id/text_statistics"
-        android:layout_width="match_parent"
+        android:id="@+id/IMT_text"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:layout_marginStart="20dp"
 
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
+        android:text="@string/IMT_text_statistic"
         android:textSize="20sp"
 
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
 
+    <TextView
+        android:id="@+id/water_norm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+
+        android:text="@string/water_norm_text_statistic"
+        android:textSize="20sp"
+
+        app:layout_constraintTop_toBottomOf="@+id/IMT_text"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <TextView
+        android:id="@+id/number_IMT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+
+        android:text="Норма"
+        android:textSize="20sp"
+
+        app:layout_constraintLeft_toRightOf="@+id/IMT_text"
+        app:layout_constraintTop_toTopOf="@+id/IMT_text" />
+
+    <TextView
+        android:id="@+id/number_water"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+
+        android:text="1400 мл"
+        android:textSize="20sp"
+
+        app:layout_constraintLeft_toRightOf="@+id/water_norm"
+        app:layout_constraintTop_toTopOf="@+id/water_norm" />
+
+
+    <TextView
+        android:id="@+id/calories_consumed_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_marginStart="20dp"
+
+        android:text="Потребленные калории:"
+        android:textSize="20sp"
+
+        app:layout_constraintTop_toBottomOf="@+id/water_norm"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <TextView
+        android:id="@+id/calories_remaining_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+
+        android:text="Осталось:"
+        android:textSize="20sp"
+
+        app:layout_constraintTop_toBottomOf="@+id/calories_consumed_text"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <TextView
+        android:id="@+id/calories_consumed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+
+        android:text="2000 ккал"
+        android:textSize="20sp"
+
+        app:layout_constraintLeft_toRightOf="@+id/calories_consumed_text"
+        app:layout_constraintTop_toTopOf="@+id/calories_consumed_text"/>
+
+    <TextView
+        android:id="@+id/calories_remaining"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+
+        android:text="500 ккал"
+        android:textSize="20sp"
+
+        app:layout_constraintLeft_toRightOf="@+id/calories_remaining_text"
+        app:layout_constraintTop_toTopOf="@+id/calories_remaining_text" />
+
+
+
+    <TextView
+        android:id="@+id/water_consumed_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="20dp"
+
+        android:text="Потребленная вода:"
+        android:textSize="20sp"
+
+        app:layout_constraintTop_toBottomOf="@+id/calories_remaining_text"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <TextView
+        android:id="@+id/water_remaining_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+
+        android:text="Осталось:"
+        android:textSize="20sp"
+
+        app:layout_constraintTop_toBottomOf="@+id/water_consumed_text"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <TextView
+        android:id="@+id/water_consumed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+
+        android:text="1000 мл"
+        android:textSize="20sp"
+
+        app:layout_constraintTop_toTopOf="@+id/water_consumed_text"
+        app:layout_constraintLeft_toRightOf="@+id/water_consumed_text"/>
+
+    <TextView
+        android:id="@+id/water_remaining"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+
+        android:text="400 мл"
+        android:textSize="20sp"
+
+        app:layout_constraintTop_toTopOf="@+id/water_remaining_text"
+        app:layout_constraintLeft_toRightOf="@+id/water_remaining_text"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

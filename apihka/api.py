@@ -15,6 +15,7 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI()
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+
 # Dependency
 def get_db():
     db = SessionLocal()
@@ -23,9 +24,11 @@ def get_db():
     finally:
         db.close()
 
+
 class UserLogin(BaseModel):
     login: str
     password: str
+
 
 class UserRegister(BaseModel):
     name: str
@@ -38,12 +41,21 @@ class UserRegister(BaseModel):
     login: str
     photo: str = None  # Добавлено поле для фотографии пользователя
 
+
 @app.post("/login")
 def login(user_login: UserLogin, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.login == user_login.login).first()
     if not user or user.password != user_login.password:
         raise HTTPException(status_code=400, detail="Invalid login or password")
-    return {"message": "Login successful", "user_id": user.id}
+
+    return {
+        "id": user.id,
+        "name": user.name,
+        "login": user.login,
+        "birthday": user.birthday.strftime("%Y-%m-%d") if user.birthday else None,
+        "message": "Login successful"
+    }
+
 
 @app.post("/register")
 def register(user_register: UserRegister, db: Session = Depends(get_db)):
@@ -78,3 +90,18 @@ def register(user_register: UserRegister, db: Session = Depends(get_db)):
     except Exception as e:
         logger.error(f"Registration failed: {e}")
         raise HTTPException(status_code=500, detail="Registration failed")
+
+
+@app.get("/users/{user_id}")
+def get_user(user_id: int, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {
+        "id": user.id,
+        "name": user.name,
+        "login": user.login,
+        "birthday": user.birthday.strftime("%Y-%m-%d") if user.birthday else None
+    }
+
+
