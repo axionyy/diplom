@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session, sessionmaker
 from pydantic import BaseModel, ValidationError
-from typing import List
+from typing import List, Optional
 from database import *
 import logging
 
@@ -40,6 +40,20 @@ class UserRegister(BaseModel):
     password: str
     login: str
     photo: str = None  # Добавлено поле для фотографии пользователя
+
+
+class UserUpdate(BaseModel):
+    login: Optional[str] = None
+    name: Optional[str] = None
+    surname: Optional[str] = None
+    height: Optional[float] = None
+    birthday: Optional[str] = None
+    password: Optional[str] = None
+
+
+class VerifyPasswordRequest(BaseModel):
+    user_id: int
+    password: str
 
 
 @app.post("/login")
@@ -101,7 +115,59 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
         "id": user.id,
         "name": user.name,
         "login": user.login,
-        "birthday": user.birthday.strftime("%Y-%m-%d") if user.birthday else None
+        "birthday": user.birthday.strftime("%Y-%m-%d") if user.birthday else None,
+        "height": user.height,  # Добавлено поле роста
+        "surname": user.surname,  # Также добавьте другие нужные поля
+        "weight": user.weight,
+        "gender": user.gender
     }
 
 
+@app.put("/users/{user_id}")
+def update_user(user_id: int, user_update: UserUpdate, db: Session = Depends(get_db)):
+    try:
+        user = db.query(User).filter(User.id == user_id).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        # Обновляем только переданные поля
+        if user_update.login is not None:
+            user.login = user_update.login
+        if user_update.name is not None:
+            user.name = user_update.name
+        if user_update.surname is not None:
+            user.surname = user_update.surname
+        if user_update.height is not None:
+            user.height = user_update.height
+        if user_update.birthday is not None:
+            user.birthday = user_update.birthday
+        if user_update.password is not None:
+            user.password = user_update.password  # В реальности нужно хэшировать
+
+        db.commit()
+
+        return {
+            "id": user.id,
+            "login": user.login,
+            "name": user.name,
+            "surname": user.surname,
+            "height": user.height,
+            "birthday": user.birthday
+        }
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.post("/users/verify-password")
+def verify_password(verify_request: VerifyPasswordRequest, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.id == verify_request.user_id).first()
+    if not user:
+        return {"is_valid": False}
+
+    # В реальном приложении используйте хэширование:
+    # if not verify_password_hash(verify_request.password, user.password):
+    if user.password != verify_request.password:
+        return {"is_valid": False}
+
+    return {"is_valid": True}

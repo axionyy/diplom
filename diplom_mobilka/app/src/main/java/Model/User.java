@@ -1,8 +1,9 @@
 package Model;
 
 import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
 
-public class User {
+public class User implements Serializable {
     @SerializedName("id")
     public int id;
 

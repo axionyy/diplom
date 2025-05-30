@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
                             // Сохраняем данные
                             authManager.setLoggedIn(true);
                             authManager.saveUserId(user.id);
-                            dataManager.saveData(user.toString());
+                            dataManager.saveData(user);
 
                             Log.d("Authorization", "Saved user ID: " + authManager.getUserId()); // Проверка сохранения
 

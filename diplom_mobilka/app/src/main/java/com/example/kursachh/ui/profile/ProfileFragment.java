@@ -1,5 +1,6 @@
 package com.example.kursachh.ui.profile;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,6 +33,7 @@ import retrofit2.Response;
 
 public class ProfileFragment extends Fragment {
 
+    private static final int EDIT_PROFILE_REQUEST = 1;
     private AuthManager authManager;
     private DataManager dataManager;
     private ProfileViewModel mViewModel;
@@ -57,7 +59,7 @@ public class ProfileFragment extends Fragment {
         imageView.setOnClickListener(v -> {
             Toast.makeText(getActivity(), "Вы вышли из аккаунта", Toast.LENGTH_SHORT).show();
             authManager.setLoggedIn(false);
-            dataManager.saveData(null); // Очищаем данные пользователя
+            dataManager.saveData(null);
             Intent intent = new Intent(getActivity(), MainActivity.class);
             startActivity(intent);
             requireActivity().finish();
@@ -65,8 +67,12 @@ public class ProfileFragment extends Fragment {
 
         Button buttonRefactorProfile = view.findViewById(R.id.refactorProfileButton);
         buttonRefactorProfile.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), RefactorYourProfile.class);
-            startActivity(intent);
+            int userId = authManager.getUserId();
+            if (userId > 0) {
+                Intent intent = new Intent(getActivity(), RefactorYourProfile.class);
+                intent.putExtra("user_id", userId);
+                startActivityForResult(intent, EDIT_PROFILE_REQUEST);
+            }
         });
 
         Button buttonRefactorWeight = view.findViewById(R.id.refactorWeightUserButton);
@@ -81,45 +87,55 @@ public class ProfileFragment extends Fragment {
             startActivity(intent);
         });
 
-        // Получаем ID пользователя из авторизации
-        int userId = getUserIdFromAuth();
+        loadUserData();
+    }
 
-        if (userId != -1) {
-            fetchUserData(userId);
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == EDIT_PROFILE_REQUEST && resultCode == Activity.RESULT_OK) {
+            if (data != null && data.hasExtra("updated_user")) {
+                User updatedUser = (User) data.getSerializableExtra("updated_user");
+                if (updatedUser != null) {
+                    // Обновляем UI и сохраняем данные
+                    updateProfileUI(updatedUser);
+                    dataManager.saveData(updatedUser);
+                }
+            }
+            // Всегда обновляем данные с сервера для актуальности
+            loadUserData();
         }
     }
 
-    private int getUserIdFromAuth() {
+    private void loadUserData() {
         int userId = authManager.getUserId();
         if (userId <= 0) {
-            Log.e("ProfileFragment", "Invalid user ID: " + userId);
+            // Заменяем handleInvalidUser() на конкретную реализацию
+            Log.e("ProfileFragment", "Invalid user ID");
             Toast.makeText(getContext(), "Ошибка авторизации", Toast.LENGTH_SHORT).show();
-            // Перенаправляем на экран авторизации
             startActivity(new Intent(getActivity(), MainActivity.class));
             requireActivity().finish();
-        }
-        return userId;
-    }
-
-    private void fetchUserData(int userId) {
-        Log.d("ProfileFragment", "Attempting to fetch data for user ID: " + userId);
-
-        if (userId <= 0) {
-            Log.e("ProfileFragment", "Invalid user ID, cannot fetch data");
             return;
         }
 
-        IUser userService = RetroFit.getClient().create(IUser.class);
-        Call<User> call = userService.getUser(userId);
+        // Показываем сохраненные данные, если они есть
+        User savedUser = dataManager.getData();
+        if (savedUser != null) {
+            updateProfileUI(savedUser);
+        }
 
-        call.enqueue(new Callback<User>() {
+        // Загружаем свежие данные с сервера
+        IUser userService = RetroFit.getClient().create(IUser.class);
+        userService.getUser(userId).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     User user = response.body();
-                    Log.d("ProfileFragment", "User data received: " + user.id);
                     updateProfileUI(user);
+                    dataManager.saveData(user);
                 } else {
+                    // Заменяем handleErrorResponse(response) на конкретную реализацию
                     Log.e("ProfileFragment", "Failed to fetch user: " + response.code());
                     try {
                         Log.e("ProfileFragment", "Error body: " + response.errorBody().string());
@@ -137,23 +153,46 @@ public class ProfileFragment extends Fragment {
     }
 
     private void updateProfileUI(User user) {
-        TextView loginUser = getView().findViewById(R.id.loginUser);
-        TextView nameUser = getView().findViewById(R.id.nameUser);
-        TextView birthdayUser = getView().findViewById(R.id.birthdayUser);
+        View view = getView();
+        if (view == null) return;
+
+        TextView loginUser = view.findViewById(R.id.loginUser);
+        TextView nameUser = view.findViewById(R.id.nameUser);
+        TextView birthdayUser = view.findViewById(R.id.birthdayUser);
 
         if (loginUser != null && nameUser != null && birthdayUser != null) {
-            loginUser.setText(user.login);
-            nameUser.setText(user.name);
-            birthdayUser.setText(user.birthday);
-        } else {
-            Log.e("ProfileFragment", "One or more TextViews are null");
+            loginUser.setText(user.login != null ? user.login : "");
+            nameUser.setText(user.name != null ? user.name : "");
+
+            // Форматирование даты рождения (если нужно)
+            if (user.birthday != null) {
+                try {
+                    String[] dateParts = user.birthday.split("-");
+                    if (dateParts.length == 3) {
+                        birthdayUser.setText(String.format("%s.%s.%s",
+                                dateParts[2], dateParts[1], dateParts[0]));
+                    } else {
+                        birthdayUser.setText(user.birthday);
+                    }
+                } catch (Exception e) {
+                    birthdayUser.setText(user.birthday);
+                }
+            } else {
+                birthdayUser.setText("");
+            }
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Обновляем данные при каждом возвращении на фрагмент
+        loadUserData();
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
-        // TODO: Use the ViewModel
     }
 }
