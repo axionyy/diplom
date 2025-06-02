@@ -56,6 +56,25 @@ class VerifyPasswordRequest(BaseModel):
     password: str
 
 
+class WeightRecordCreate(BaseModel):
+    date: str
+    weight: float
+    notes: Optional[str] = None
+
+
+class WeightRecordResponse(BaseModel):
+    id: int
+    date: str
+    weight: float
+    bmi: Optional[float]
+    notes: Optional[str]
+
+
+class WeightRecordCreate(BaseModel):
+    date: str
+    weight: float
+
+
 @app.post("/login")
 def login(user_login: UserLogin, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.login == user_login.login).first()
@@ -171,3 +190,141 @@ def verify_password(verify_request: VerifyPasswordRequest, db: Session = Depends
         return {"is_valid": False}
 
     return {"is_valid": True}
+
+
+@app.post("/users/{user_id}/weight-records")
+def create_weight_record(
+        user_id: int,
+        record: WeightRecordCreate,
+        db: Session = Depends(get_db)
+):
+    try:
+        # Проверяем существование пользователя
+        user = db.query(User).filter(User.id == user_id).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        # Рассчитываем BMI (опционально)
+        bmi = None
+        if user.height:
+            bmi = record.weight / ((user.height / 100) ** 2)
+
+        # Создаем новую запись
+        new_record = UserWeightHistory(
+            user_id=user_id,
+            date=record.date,
+            weight=record.weight,
+            bmi=bmi,
+            notes=record.notes
+        )
+
+        db.add(new_record)
+        db.commit()
+        db.refresh(new_record)
+
+        return {
+            "id": new_record.id,
+            "date": new_record.date.strftime("%Y-%m-%d"),
+            "weight": new_record.weight,
+            "bmi": new_record.bmi,
+            "notes": new_record.notes
+        }
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.get("/users/{user_id}/weight-records")
+def get_weight_records(
+        user_id: int,
+        limit: Optional[int] = 100,
+        db: Session = Depends(get_db)
+):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    records = db.query(UserWeightHistory) \
+        .filter(UserWeightHistory.user_id == user_id) \
+        .order_by(UserWeightHistory.date.desc()) \
+        .limit(limit) \
+        .all()
+
+    return [{
+        "id": r.id,
+        "date": r.date.strftime("%Y-%m-%d"),
+        "weight": r.weight,
+        "bmi": r.bmi,
+        "notes": r.notes
+    } for r in records]
+
+
+@app.delete("/weight-records/{record_id}")
+def delete_weight_record(
+        record_id: int,
+        db: Session = Depends(get_db)
+):
+    record = db.query(UserWeightHistory).filter(UserWeightHistory.id == record_id).first()
+    if not record:
+        raise HTTPException(status_code=404, detail="Record not found")
+
+    try:
+        db.delete(record)
+        db.commit()
+        return {"message": "Weight record deleted successfully"}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.post("/users/{user_id}/weight-history")
+def create_weight_record(
+        user_id: int,
+        record: WeightRecordCreate,
+        db: Session = Depends(get_db)
+):
+    try:
+        # Проверяем существование пользователя
+        user = db.query(User).filter(User.id == user_id).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        # Создаем новую запись в истории
+        new_record = UserWeightHistory(
+            user_id=user_id,
+            date=record.date,
+            weight=record.weight
+        )
+
+        db.add(new_record)
+
+        # Обновляем текущий вес пользователя
+        user.weight = record.weight
+
+        db.commit()
+
+        return {
+            "id": new_record.id,
+            "date": new_record.date.strftime("%Y-%m-%d"),
+            "weight": new_record.weight
+        }
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.get("/users/{user_id}/weight-history")
+def get_weight_history(
+        user_id: int,
+        db: Session = Depends(get_db)
+):
+    records = db.query(UserWeightHistory) \
+        .filter(UserWeightHistory.user_id == user_id) \
+        .order_by(UserWeightHistory.date.desc()) \
+        .all()
+
+    return [{
+        "id": r.id,
+        "date": r.date.strftime("%Y-%m-%d"),
+        "weight": r.weight
+    } for r in records]

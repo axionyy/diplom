@@ -21,6 +21,9 @@ public class UserUpdate {
     @SerializedName("password")
     private String password;
 
+    @SerializedName("weight")
+    private Float weight;
+
     public UserUpdate(String login, String name, String surname, Float height, String birthday, String password) {
         this.login = login;
         this.name = name;
@@ -30,6 +33,11 @@ public class UserUpdate {
         this.password = password;
     }
 
+    // Новый конструктор с weight
+    public UserUpdate(Float weight) {
+        this.weight = weight;
+    }
+
     // Геттеры
     public String getLogin() { return login; }
     public String getName() { return name; }
@@ -37,4 +45,6 @@ public class UserUpdate {
     public Float getHeight() { return height; }
     public String getBirthday() { return birthday; }
     public String getPassword() { return password; }
+    public Float getWeight() { return weight; }
+    public void setWeight(Float weight) { this.weight = weight; }
 }

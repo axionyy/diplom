@@ -4,6 +4,7 @@ from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 
+
 class Eating(Base):
     __tablename__ = 'eating'
 
@@ -20,6 +21,7 @@ class Eating(Base):
     user = relationship("User", back_populates="eatings")
     food = relationship("Food", back_populates="eatings")
 
+
 class Food(Base):
     __tablename__ = 'food'
 
@@ -34,6 +36,7 @@ class Food(Base):
 
     eatings = relationship("Eating", back_populates="food")
     reciep = relationship("Reciep", back_populates="foods")
+
 
 class Reciep(Base):
     __tablename__ = 'reciep'
@@ -53,6 +56,7 @@ class Reciep(Base):
     user = relationship("User", back_populates="recieps")
     foods = relationship("Food", back_populates="reciep")
 
+
 class User(Base):
     __tablename__ = 'users'
 
@@ -69,6 +73,20 @@ class User(Base):
 
     eatings = relationship("Eating", back_populates="user")
     recieps = relationship("Reciep", back_populates="user")
+    weight_history = relationship("UserWeightHistory", back_populates="user",
+                                  cascade="all, delete-orphan")
+
+
+class UserWeightHistory(Base):
+    __tablename__ = 'user_weight_history'
+
+    id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    date = Column(Date, nullable=False)
+    weight = Column(Float, nullable=False)
+
+    user = relationship("User", back_populates="weight_history")
+
 
 # Создание подключения к базе данных
 engine = create_engine("postgresql://postgres:1153@localhost:5432/test1", echo=True)

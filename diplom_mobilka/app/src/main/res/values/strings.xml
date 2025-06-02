@@ -76,4 +76,7 @@
     <string name="IMT_text_statistic">"Индекс массы тела (ИМТ):"</string>
     <string name="water_norm_text_statistic">"Норма потребления воды:"</string>
 
+    <string name="startWeightUserWindowText">"Начальный вес:"</string>
+    <string name="updateWeightUserWindowText">"Показатель веса:"</string>
+    <string name="updateWeightButtonWindowText">"Изменить вес"</string>
 </resources>
