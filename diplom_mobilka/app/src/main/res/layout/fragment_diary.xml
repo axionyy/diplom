@@ -15,7 +15,7 @@
 
         android:text="@string/makingMealsText"
         android:textSize="20sp"
-        android:textColor="@color/black"
+        android:textColor="?android:attr/textColorPrimary"
 
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -32,7 +32,7 @@
         android:text="@string/waterString"
         android:textAllCaps="false"
         android:textSize="20sp"
-        android:textColor="@color/black"
+        android:textColor="?android:attr/textColorPrimary"
         android:backgroundTint="@color/blue"
 
         app:layout_constraintLeft_toLeftOf="parent"
@@ -61,7 +61,7 @@
 
             android:text="@string/breakfastString"
             android:textAlignment="center"
-            android:textColor="@color/black"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="20sp" />
 
         <ImageView
@@ -93,7 +93,7 @@
 
             android:text="@string/lunchString"
             android:textAlignment="center"
-            android:textColor="@color/black"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="20sp" />
 
         <ImageView
@@ -125,7 +125,7 @@
 
             android:text="@string/dinnerString"
             android:textAlignment="center"
-            android:textColor="@color/black"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="20sp" />
 
         <ImageView
@@ -157,7 +157,7 @@
 
             android:text="@string/snackString"
             android:textAlignment="center"
-            android:textColor="@color/black"
+            android:textColor="?android:attr/textColorPrimary"
             android:textSize="20sp" />
 
         <ImageView

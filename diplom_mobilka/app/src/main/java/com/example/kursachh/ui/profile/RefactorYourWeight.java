@@ -180,18 +180,25 @@ public class RefactorYourWeight extends AppCompatActivity {
             @Override
             public void onResponse(Call<WeightRecord> call, Response<WeightRecord> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    WeightRecord record = response.body();
-                    // Обновляем ID записи, полученный от сервера
-                    for (WeightRecord localRecord : weightRecords) {
-                        if (localRecord.getDate().equals(date) && localRecord.getWeight() == weight) {
-                            try {
-                                java.lang.reflect.Field field = WeightRecord.class.getDeclaredField("id");
-                                field.setAccessible(true);
-                                field.set(localRecord, record.getId());
-                                saveRecords();
-                            } catch (Exception e) {
-                                Log.e("Reflection", "Failed to set record ID", e);
-                            }
+                    WeightRecord serverRecord = response.body();
+                    // Находим и обновляем локальную запись
+                    for (int i = 0; i < weightRecords.size(); i++) {
+                        WeightRecord localRecord = weightRecords.get(i);
+                        if (localRecord.getDate().equals(date) &&
+                                localRecord.getWeight() == weight &&
+                                localRecord.getId() == 0) {
+
+                            // Создаем новую запись с правильным ID
+                            WeightRecord updatedRecord = new WeightRecord(
+                                    serverRecord.getId(),
+                                    localRecord.getDate(),
+                                    localRecord.getWeight()
+                            );
+
+                            // Заменяем старую запись
+                            weightRecords.set(i, updatedRecord);
+                            saveRecords();
+                            displayAllRecords();
                             break;
                         }
                     }
@@ -242,6 +249,7 @@ public class RefactorYourWeight extends AppCompatActivity {
                     weightRecords.clear();
                     for (WeightRecord record : serverRecords) {
                         weightRecords.add(new WeightRecord(
+                                record.getId(), // Добавляем ID записи
                                 convertApiDateToDisplay(record.getDate()),
                                 record.getWeight()
                         ));

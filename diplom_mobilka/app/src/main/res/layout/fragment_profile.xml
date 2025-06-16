@@ -40,7 +40,7 @@
 
         android:text="@string/refactorProfileButtonText"
         android:backgroundTint="@color/blue"
-        android:textColor="@color/black"
+        android:textColor="?android:attr/textColorPrimary"
         android:textAllCaps="false"
         android:textSize="15sp"
 
@@ -66,7 +66,7 @@
 
             android:text="@string/loginUserProfileText"
             android:textSize="20sp"
-            android:textColor="@color/black" />
+            android:textColor="?android:attr/textColorPrimary" />
 
         <TextView
             android:id="@+id/loginUser"
@@ -98,7 +98,7 @@
 
             android:text="@string/nameUserProfileText"
             android:textSize="20sp"
-            android:textColor="@color/black" />
+            android:textColor="?android:attr/textColorPrimary" />
 
         <TextView
             android:id="@+id/nameUser"
@@ -130,7 +130,7 @@
 
             android:text="@string/birthdayUserProfileText"
             android:textSize="20sp"
-            android:textColor="@color/black" />
+            android:textColor="?android:attr/textColorPrimary" />
 
         <TextView
             android:id="@+id/birthdayUser"
@@ -155,7 +155,7 @@
         android:text="@string/refactorWeightUserButtonText"
         android:textAllCaps="false"
         android:textSize="20sp"
-        android:textColor="@color/black"
+        android:textColor="?android:attr/textColorPrimary"
 
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/birthdayUserProfile"/>
@@ -171,7 +171,7 @@
         android:text="@string/resepsUsersButtonText"
         android:textAllCaps="false"
         android:textSize="20sp"
-        android:textColor="@color/black"
+        android:textColor="?android:attr/textColorPrimary"
 
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/refactorWeightUserButton"/>
@@ -187,44 +187,11 @@
         android:text="@string/settingsButtonText"
         android:textAllCaps="false"
         android:textSize="20sp"
-        android:textColor="@color/black"
+        android:textColor="?android:attr/textColorPrimary"
 
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/resepsUsersButton"/>
 
-
-    <Button
-        android:id="@+id/supportButton"
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-
-        android:backgroundTint="@color/gray"
-        android:text="@string/supportButtonText"
-        android:textAllCaps="false"
-        android:textSize="20sp"
-        android:textColor="@color/black"
-
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/settingsButton"/>
-
-
-    <Button
-        android:id="@+id/achievementsButton"
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-
-        android:backgroundTint="@color/gray"
-        android:text="@string/achievementsButtonText"
-        android:textAllCaps="false"
-        android:textSize="20sp"
-        android:textColor="@color/black"
-
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/supportButton"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

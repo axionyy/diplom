@@ -33,6 +33,12 @@
             android:name=".ui.profile.YourReseps"
             android:exported="false"/>
         <activity
+            android:name=".ui.profile.RecipeDetailActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".ui.profile.SettingsActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

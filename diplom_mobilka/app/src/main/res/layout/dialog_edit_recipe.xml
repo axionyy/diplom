@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Название рецепта -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Название рецепта"
+            android:textSize="14sp"
+            android:textColor="?android:attr/textColorPrimary"/>
+
+        <EditText
+            android:id="@+id/etEditRecipeName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:textColor="?android:attr/textColorPrimary"
+            android:inputType="textCapSentences"/>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ссылка на фото (необязательно)"
+            android:textSize="14sp"
+            android:textColor="?android:attr/textColorPrimary"/>
+
+        <EditText
+            android:id="@+id/etEditRecipePhoto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:textColor="?android:attr/textColorPrimary"
+            android:inputType="textUri"/>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Калории (ккал)"
+            android:textSize="14sp"
+            android:textColor="?android:attr/textColorPrimary"/>
+
+        <EditText
+            android:id="@+id/etEditRecipeCalories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:textColor="?android:attr/textColorPrimary"
+            android:inputType="numberDecimal"/>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ингредиенты (через запятую)"
+            android:textSize="14sp"
+            android:textColor="?android:attr/textColorPrimary"/>
+
+        <EditText
+            android:id="@+id/etEditRecipeComponents"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:textColor="?android:attr/textColorPrimary"
+            android:inputType="textCapSentences|textMultiLine"
+            android:minLines="3"/>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Шаги приготовления"
+            android:textSize="14sp"
+            android:textColor="?android:attr/textColorPrimary"/>
+
+        <EditText
+            android:id="@+id/etEditRecipeSteps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:textColor="?android:attr/textColorPrimary"
+            android:inputType="textCapSentences|textMultiLine"
+            android:minLines="5"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Белки (г)"
+                    android:textSize="14sp"
+                    android:textColor="?android:attr/textColorPrimary"/>
+
+                <EditText
+                    android:id="@+id/etEditRecipeProteins"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:inputType="numberDecimal"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginStart="8dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Жиры (г)"
+                    android:textSize="14sp"
+                    android:textColor="?android:attr/textColorPrimary"/>
+
+                <EditText
+                    android:id="@+id/etEditRecipeFats"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:inputType="numberDecimal"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginStart="8dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Углеводы (г)"
+                    android:textSize="14sp"
+                    android:textColor="?android:attr/textColorPrimary"/>
+
+                <EditText
+                    android:id="@+id/etEditRecipeCarbs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:inputType="numberDecimal"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnSaveEditRecipe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:text="Сохранить изменения"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="20sp"
+            android:textAllCaps="false"
+            android:backgroundTint="@color/blue"/>
+    </LinearLayout>
+</ScrollView>

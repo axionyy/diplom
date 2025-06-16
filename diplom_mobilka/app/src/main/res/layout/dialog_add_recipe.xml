@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <EditText
+            android:id="@+id/etRecipeName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:hint="Название рецепта *"
+            android:textColor="?android:attr/textColorPrimary"
+            android:inputType="textCapSentences"/>
+
+        <EditText
+            android:id="@+id/etRecipeCalories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:hint="Калории (ккал)"
+            android:textColor="?android:attr/textColorPrimary"
+            android:inputType="numberDecimal"/>
+
+        <EditText
+            android:id="@+id/etRecipeComponents"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:hint="Ингредиенты * (через запятую)"
+            android:textColor="?android:attr/textColorPrimary"
+            android:inputType="textCapSentences|textMultiLine"
+            android:minLines="3"/>
+
+        <EditText
+            android:id="@+id/etRecipeSteps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:hint="Шаги приготовления *"
+            android:textColor="?android:attr/textColorPrimary"
+            android:inputType="textCapSentences|textMultiLine"
+            android:minLines="5"/>
+
+
+        <EditText
+            android:id="@+id/etRecipePhoto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:hint="Ссылка на фото"
+            android:textColor="?android:attr/textColorPrimary"
+            android:inputType="textUri"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <EditText
+                android:id="@+id/etRecipeProteins"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Белки (г)"
+                android:textColor="?android:attr/textColorPrimary"
+                android:inputType="numberDecimal"/>
+
+            <EditText
+                android:id="@+id/etRecipeFats"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Жиры (г)"
+                android:textColor="?android:attr/textColorPrimary"
+                android:inputType="numberDecimal"/>
+
+            <EditText
+                android:id="@+id/etRecipeCarbs"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Углеводы (г)"
+                android:textColor="?android:attr/textColorPrimary"
+                android:inputType="numberDecimal"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnSaveRecipe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Сохранить рецепт"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="20sp"
+            android:textAllCaps="false"
+            android:backgroundTint="@color/blue"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="* - обязательные поля"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="12sp"
+            android:layout_marginTop="8dp"/>
+    </LinearLayout>
+</ScrollView>

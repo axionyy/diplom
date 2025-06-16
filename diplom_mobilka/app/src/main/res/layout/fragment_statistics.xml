@@ -15,6 +15,7 @@
         android:layout_marginStart="20dp"
 
         android:text="@string/IMT_text_statistic"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="20sp"
 
         app:layout_constraintTop_toTopOf="parent"
@@ -28,6 +29,7 @@
         android:layout_marginStart="20dp"
 
         android:text="@string/water_norm_text_statistic"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="20sp"
 
         app:layout_constraintTop_toBottomOf="@+id/IMT_text"
@@ -40,6 +42,7 @@
         android:layout_marginStart="20dp"
 
         android:text="Норма"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="20sp"
 
         app:layout_constraintLeft_toRightOf="@+id/IMT_text"
@@ -52,6 +55,7 @@
         android:layout_marginStart="20dp"
 
         android:text="1400 мл"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="20sp"
 
         app:layout_constraintLeft_toRightOf="@+id/water_norm"
@@ -66,6 +70,7 @@
         android:layout_marginStart="20dp"
 
         android:text="Потребленные калории:"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="20sp"
 
         app:layout_constraintTop_toBottomOf="@+id/water_norm"
@@ -79,6 +84,7 @@
         android:layout_marginStart="20dp"
 
         android:text="Осталось:"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="20sp"
 
         app:layout_constraintTop_toBottomOf="@+id/calories_consumed_text"
@@ -91,6 +97,7 @@
         android:layout_marginStart="20dp"
 
         android:text="2000 ккал"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="20sp"
 
         app:layout_constraintLeft_toRightOf="@+id/calories_consumed_text"
@@ -103,6 +110,7 @@
         android:layout_marginStart="20dp"
 
         android:text="500 ккал"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="20sp"
 
         app:layout_constraintLeft_toRightOf="@+id/calories_remaining_text"
@@ -118,6 +126,7 @@
         android:layout_marginStart="20dp"
 
         android:text="Потребленная вода:"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="20sp"
 
         app:layout_constraintTop_toBottomOf="@+id/calories_remaining_text"
@@ -131,6 +140,7 @@
         android:layout_marginStart="20dp"
 
         android:text="Осталось:"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="20sp"
 
         app:layout_constraintTop_toBottomOf="@+id/water_consumed_text"
@@ -143,6 +153,7 @@
         android:layout_marginStart="20dp"
 
         android:text="1000 мл"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="20sp"
 
         app:layout_constraintTop_toTopOf="@+id/water_consumed_text"
@@ -155,6 +166,7 @@
         android:layout_marginStart="20dp"
 
         android:text="400 мл"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="20sp"
 
         app:layout_constraintTop_toTopOf="@+id/water_remaining_text"

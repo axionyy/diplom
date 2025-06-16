@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session, sessionmaker
 from pydantic import BaseModel, ValidationError
@@ -73,6 +75,28 @@ class WeightRecordResponse(BaseModel):
 class WeightRecordCreate(BaseModel):
     date: str
     weight: float
+
+
+class RecipeCreateRequest(BaseModel):
+    name: str
+    callories: float
+    photo: Optional[str] = None
+    components: str
+    steps: str
+    squirrels: float = 0
+    fats: float = 0
+    carbohydrates: float = 0
+
+
+class RecipeUpdateRequest(BaseModel):
+    name: str
+    callories: float
+    photo: Optional[str] = None
+    components: str
+    steps: str
+    squirrels: float
+    fats: float
+    carbohydrates: float
 
 
 @app.post("/login")
@@ -328,3 +352,102 @@ def get_weight_history(
         "date": r.date.strftime("%Y-%m-%d"),
         "weight": r.weight
     } for r in records]
+
+
+@app.post("/users/{user_id}/recipes")
+def create_recipe(
+    user_id: int,
+    recipe: RecipeCreateRequest,
+    db: Session = Depends(get_db)
+):
+    try:
+        # Проверяем существование пользователя
+        user = db.query(User).filter(User.id == user_id).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        # Создаем новый рецепт
+        new_recipe = Reciep(
+            name=recipe.name,
+            callories=recipe.callories if recipe.callories else 0,
+            photo=recipe.photo,
+            components=recipe.components,
+            steps=recipe.steps,
+            squirrels=recipe.squirrels if recipe.squirrels else 0,
+            fats=recipe.fats if recipe.fats else 0,
+            carbohydrates=recipe.carbohydrates if recipe.carbohydrates else 0,
+            userID=user_id,
+            dateCreate=datetime.now().date()
+        )
+
+        db.add(new_recipe)
+        db.commit()
+        db.refresh(new_recipe)
+
+        return {"message": "Рецепт успешно создан", "id": new_recipe.id}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=400, detail=f"Ошибка создания рецепта: {str(e)}")
+
+
+@app.get("/users/{user_id}/recipes")
+def get_user_recipes(user_id: int, db: Session = Depends(get_db)):
+    recipes = db.query(Reciep)\
+        .filter(Reciep.userID == user_id)\
+        .order_by(Reciep.dateCreate.desc())\
+        .all()
+
+    return [{
+        "id": r.id,
+        "name": r.name,
+        "photo": r.photo,
+        "callories": r.callories,
+        "components": r.components,
+        "steps": r.steps,
+        "squirrels": r.squirrels,
+        "fats": r.fats,
+        "carbohydrates": r.carbohydrates,
+        "dateCreate": r.dateCreate.strftime("%Y-%m-%d")
+    } for r in recipes]
+
+
+@app.put("/recipes/{recipe_id}")
+def update_recipe(
+    recipe_id: int,
+    recipe: RecipeUpdateRequest,
+    db: Session = Depends(get_db)
+):
+    try:
+        db_recipe = db.query(Reciep).filter(Reciep.id == recipe_id).first()
+        if not db_recipe:
+            raise HTTPException(status_code=404, detail="Рецепт не найден")
+
+        db_recipe.name = recipe.name
+        db_recipe.callories = recipe.callories
+        db_recipe.photo = recipe.photo
+        db_recipe.components = recipe.components
+        db_recipe.steps = recipe.steps
+        db_recipe.squirrels = recipe.squirrels
+        db_recipe.fats = recipe.fats
+        db_recipe.carbohydrates = recipe.carbohydrates
+
+        db.commit()
+        return {"message": "Рецепт успешно обновлен"}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.delete("/recipes/{recipe_id}")
+def delete_recipe(recipe_id: int, db: Session = Depends(get_db)):
+    try:
+        db_recipe = db.query(Reciep).filter(Reciep.id == recipe_id).first()
+        if not db_recipe:
+            raise HTTPException(status_code=404, detail="Рецепт не найден")
+
+        db.delete(db_recipe)
+        db.commit()
+        return {"message": "Рецепт успешно удален"}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=400, detail=str(e))

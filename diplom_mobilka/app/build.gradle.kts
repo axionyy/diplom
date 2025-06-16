@@ -37,6 +37,9 @@ android {
 
 dependencies {
 
+    implementation ("com.github.bumptech.glide:glide:4.13.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.13.0")
+
     implementation ("com.squareup.okhttp3:logging-interceptor:4.9.3")
     implementation ("com.squareup.retrofit2:retrofit:2.9.0") // Retrofit для HTTP-запросов
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")  // Конвертер Gson

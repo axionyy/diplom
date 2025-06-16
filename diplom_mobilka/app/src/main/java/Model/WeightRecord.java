@@ -12,8 +12,15 @@ public class WeightRecord {
     @SerializedName("weight")
     private float weight;
 
-    // Конструктор
+    // Конструктор без ID (для новых записей)
     public WeightRecord(String date, float weight) {
+        this.date = date;
+        this.weight = weight;
+    }
+
+    // Конструктор с ID (для записей с сервера)
+    public WeightRecord(int id, String date, float weight) {
+        this.id = id;
         this.date = date;
         this.weight = weight;
     }

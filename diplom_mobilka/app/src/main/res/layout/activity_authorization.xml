@@ -27,7 +27,7 @@
 
         android:text="@string/author"
         android:textSize="30sp"
-        android:textColor="@color/black"
+        android:textColor="?android:attr/textColorPrimary"
 
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -41,7 +41,7 @@
 
         android:hint="@string/login"
         android:textSize="30sp"
-        android:textColor="@color/black"
+        android:textColor="?android:attr/textColorPrimary"
         android:background="@color/green"
 
         app:layout_constraintTop_toBottomOf="@+id/avtorizationText"
@@ -57,7 +57,7 @@
 
         android:hint="@string/passwordText"
         android:textSize="30sp"
-        android:textColor="@color/black"
+        android:textColor="?android:attr/textColorPrimary"
         android:background="@color/green"
 
         app:layout_constraintTop_toBottomOf="@+id/loginInputAutorization"
@@ -74,7 +74,7 @@
         android:text="@string/enter"
         android:textAllCaps="false"
         android:textSize="30sp"
-        android:textColor="@color/black"
+        android:textColor="?android:attr/textColorPrimary"
 
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -88,7 +88,7 @@
 
         android:text="@string/createProfile"
         android:textSize="18sp"
-        android:textColor="@color/black"
+        android:textColor="?android:attr/textColorPrimary"
         android:onClick="Registration"
 
         app:layout_constraintRight_toRightOf="parent"

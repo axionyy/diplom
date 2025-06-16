@@ -37,6 +37,7 @@ public class ProfileFragment extends Fragment {
     private AuthManager authManager;
     private DataManager dataManager;
     private ProfileViewModel mViewModel;
+    private Button settingsButton;
 
     public static ProfileFragment newInstance() {
         return new ProfileFragment();
@@ -88,6 +89,18 @@ public class ProfileFragment extends Fragment {
         });
 
         loadUserData();
+
+        // Обработчик кнопки настроек
+        settingsButton = view.findViewById(R.id.settingsButton);
+        settingsButton.setOnClickListener(v -> {
+            try {
+                Intent settingsIntent = new Intent(getActivity(), SettingsActivity.class);
+                startActivity(settingsIntent);
+            } catch (Exception e) {
+                Log.e("ProfileFragment", "Error starting SettingsActivity", e);
+                Toast.makeText(getContext(), "Ошибка открытия настроек", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

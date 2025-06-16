@@ -2,8 +2,11 @@ package Interface;
 
 import java.util.List;
 
+import Model.Recipe;
 import Model.User;
 import Model.WeightRecord;
+import ModelRequest.RecipeCreateRequest;
+import ModelRequest.RecipeUpdateRequest;
 import ModelRequest.UserLogin;
 import ModelRequest.UserRegister;
 import ModelRequest.UserUpdate;
@@ -45,4 +48,16 @@ public interface IUser {
 
     @DELETE("weight-records/{recordId}")
     Call<Void> deleteWeightRecord(@Path("recordId") int recordId);
+
+    @POST("users/{userId}/recipes")
+    Call<Void> createRecipe(@Path("userId") int userId, @Body RecipeCreateRequest request);
+
+    @GET("users/{userId}/recipes")
+    Call<List<Recipe>> getUserRecipes(@Path("userId") int userId);
+
+    @PUT("recipes/{recipeId}")
+    Call<Void> updateRecipe(@Path("recipeId") int recipeId, @Body RecipeUpdateRequest request);
+
+    @DELETE("recipes/{recipeId}")
+    Call<Void> deleteRecipe(@Path("recipeId") int recipeId);
 }

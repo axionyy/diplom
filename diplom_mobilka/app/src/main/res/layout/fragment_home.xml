@@ -15,6 +15,8 @@
 
         android:layout_margin="20dp"
         android:text="@string/reciepsText"
+        android:textSize="20sp"
+        android:textColor="?android:attr/textColorPrimary"
         android:textAlignment="center"
 
         app:layout_constraintLeft_toLeftOf="parent"
@@ -26,7 +28,7 @@
         android:layout_width="370dp"
         android:layout_height="0dp"
 
-        android:background="@color/white_grey"
+        android:background="?android:attr/windowBackground"
         android:layout_marginBottom="50dp"
 
         app:layout_constraintLeft_toLeftOf="parent"
