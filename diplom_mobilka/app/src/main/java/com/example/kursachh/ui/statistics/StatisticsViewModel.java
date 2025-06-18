@@ -25,18 +25,26 @@ public class StatisticsViewModel extends ViewModel {
     private final MutableLiveData<String> waterConsumed = new MutableLiveData<>("0 мл");
     private final MutableLiveData<String> waterRemaining = new MutableLiveData<>("0 мл");
 
+    private final MutableLiveData<String> caloriesConsumed = new MutableLiveData<>("0 ккал");
+    private final MutableLiveData<String> caloriesRemaining = new MutableLiveData<>("0 ккал");
+    private String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+
+
+    public void setSelectedDate(String date) {
+        this.currentDate = date;
+    }
+
     public void calculateUserStats(Float height, Float weight, String birthday, Boolean gender) {
         if (height == null || weight == null || birthday == null || gender == null) {
             imtResult.setValue("Данные отсутствуют");
             return;
         }
-        // Расчет ИМТ
+
         calculateIMT(height, weight);
-        // Расчет нормы воды
         calculateWaterNorm(weight);
-        // Расчет нормы калорий
         calculateCaloriesNorm(weight, height, birthday, gender);
     }
+
 
     private void calculateIMT(float height, float weight) {
         if (height <= 0 || weight <= 0) {
@@ -77,6 +85,62 @@ public class StatisticsViewModel extends ViewModel {
         caloriesNorm.setValue((int) calories + " ккал");
     }
 
+    public void loadWaterData(int userId, IUser userService) {
+        userService.getEatingRecords(userId, currentDate).enqueue(new Callback<List<EatingRecord>>() {
+            @Override
+            public void onResponse(Call<List<EatingRecord>> call, Response<List<EatingRecord>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    int totalWater = calculateTotalWater(response.body());
+                    updateWaterStats(totalWater);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<EatingRecord>> call, Throwable t) {
+                waterConsumed.setValue("Ошибка загрузки");
+                waterRemaining.setValue("Ошибка загрузки");
+            }
+        });
+    }
+
+    public void loadCaloriesData(int userId, IUser userService) {
+        userService.getEatingRecords(userId, currentDate).enqueue(new Callback<List<EatingRecord>>() {
+            @Override
+            public void onResponse(Call<List<EatingRecord>> call, Response<List<EatingRecord>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    float totalCalories = calculateTotalCalories(response.body());
+                    updateCaloriesStats(totalCalories);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<EatingRecord>> call, Throwable t) {
+                caloriesConsumed.setValue("Ошибка загрузки");
+                caloriesRemaining.setValue("Ошибка загрузки");
+            }
+        });
+    }
+
+    private int calculateTotalWater(List<EatingRecord> records) {
+        int total = 0;
+        for (EatingRecord record : records) {
+            if ("water".equals(record.getMealType())) {
+                total += record.getQuantity();
+            }
+        }
+        return total;
+    }
+
+    private float calculateTotalCalories(List<EatingRecord> records) {
+        float total = 0;
+        for (EatingRecord record : records) {
+            if (!"water".equals(record.getMealType())) {
+                total += record.getCallories();
+            }
+        }
+        return total;
+    }
+
     private int calculateAge(String birthday) {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
@@ -100,53 +164,50 @@ public class StatisticsViewModel extends ViewModel {
         }
     }
 
-    public void updateWaterStats(int userId, IUser userService) {
-        String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+    private void updateWaterStats(int totalWater) {
+        waterConsumed.setValue(totalWater + " мл");
 
-        userService.getEatingRecords(userId, currentDate).enqueue(new Callback<List<EatingRecord>>() {
-            @Override
-            public void onResponse(Call<List<EatingRecord>> call, Response<List<EatingRecord>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    int totalWater = 0;
-
-                    // Считаем только записи о воде (mealType = "water")
-                    for (EatingRecord record : response.body()) {
-                        if ("water".equals(record.getMealType())) {
-                            totalWater += record.getQuantity();
-                        }
-                    }
-
-                    // Обновляем потребленное количество
-                    waterConsumed.setValue(totalWater + " мл");
-
-                    // Вычисляем оставшуюся норму
-                    String currentNorm = waterNorm.getValue();
-                    if (currentNorm != null && currentNorm.contains(" мл")) {
-                        try {
-                            int norm = Integer.parseInt(currentNorm.replace(" мл", ""));
-                            int remaining = Math.max(0, norm - totalWater);
-                            waterRemaining.setValue(remaining + " мл");
-                        } catch (NumberFormatException e) {
-                            waterRemaining.setValue("Ошибка расчета");
-                        }
-                    }
+        String currentNorm = waterNorm.getValue();
+        if (currentNorm != null && currentNorm.contains(" мл")) {
+            try {
+                int norm = Integer.parseInt(currentNorm.replace(" мл", ""));
+                int remaining = norm - totalWater;
+                if (remaining >= 0) {
+                    waterRemaining.setValue(remaining + " мл");
+                } else {
+                    waterRemaining.setValue("Превышено: " + (-remaining) + " мл");
                 }
+            } catch (NumberFormatException e) {
+                waterRemaining.setValue("Ошибка расчета");
             }
+        }
+    }
 
-            @Override
-            public void onFailure(Call<List<EatingRecord>> call, Throwable t) {
-                waterConsumed.setValue("Ошибка загрузки");
-                waterRemaining.setValue("Ошибка загрузки");
+    private void updateCaloriesStats(float totalCalories) {
+        caloriesConsumed.setValue(String.format(Locale.getDefault(), "%.0f ккал", totalCalories));
+
+        String currentNorm = caloriesNorm.getValue();
+        if (currentNorm != null && currentNorm.contains(" ккал")) {
+            try {
+                int norm = Integer.parseInt(currentNorm.replace(" ккал", ""));
+                float remaining = norm - totalCalories;
+                if (remaining >= 0) {
+                    caloriesRemaining.setValue(String.format(Locale.getDefault(), "Осталось: %.0f ккал", remaining));
+                } else {
+                    caloriesRemaining.setValue(String.format(Locale.getDefault(), "Превышено: %.0f ккал", -remaining));
+                }
+            } catch (NumberFormatException e) {
+                caloriesRemaining.setValue("Ошибка расчета");
             }
-        });
+        }
     }
 
     // Геттеры для LiveData
-
-    // Добавляем геттеры для новых LiveData
-    public LiveData<String> getWaterConsumed() { return waterConsumed; }
-    public LiveData<String> getWaterRemaining() { return waterRemaining; }
     public LiveData<String> getImtResult() { return imtResult; }
     public LiveData<String> getWaterNorm() { return waterNorm; }
     public LiveData<String> getCaloriesNorm() { return caloriesNorm; }
+    public LiveData<String> getWaterConsumed() { return waterConsumed; }
+    public LiveData<String> getWaterRemaining() { return waterRemaining; }
+    public LiveData<String> getCaloriesConsumed() { return caloriesConsumed; }
+    public LiveData<String> getCaloriesRemaining() { return caloriesRemaining; }
 }

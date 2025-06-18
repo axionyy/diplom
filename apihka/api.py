@@ -109,10 +109,14 @@ class FoodItemCreate(BaseModel):
 
 class EatingRecordCreate(BaseModel):
     user_id: int
-    food_id: int  # 0 для воды
-    date: str  # Формат "ГГГГ-ММ-ДД ЧЧ:ММ"
-    meal_type: str  # Добавить тип приема пищи
-    quantity: float  # В граммах или мл для воды
+    food_id: int
+    date: str
+    meal_type: str
+    quantity: float
+    callories: Optional[float] = None
+    proteins: Optional[float] = None
+    fats: Optional[float] = None
+    carbohydrates: Optional[float] = None
 
 
 @app.post("/login")
@@ -472,16 +476,25 @@ def delete_recipe(recipe_id: int, db: Session = Depends(get_db)):
 @app.post("/food-items")
 def create_food_item(food_item: FoodItemCreate, db: Session = Depends(get_db)):
     try:
+        # Проверяем, существует ли уже продукт с таким названием
+        existing_food = db.query(Food).filter(Food.nameFood == food_item.nameFood).first()
+        if existing_food:
+            raise HTTPException(status_code=400, detail="Продукт с таким названием уже существует")
+
+        # Создаем новый продукт (без указания id - он сгенерируется автоматически)
         new_food = Food(
             nameFood=food_item.nameFood,
-            callories=food_item.calories,
+            callories=food_item.callories,
             squirrels=food_item.proteins,
             fats=food_item.fats,
-            carbohydrates=food_item.carbohydrates
+            carbohydrates=food_item.carbohydrates,
+            reciepID=None  # Явно указываем None для reciepID
         )
+
         db.add(new_food)
         db.commit()
         db.refresh(new_food)
+
         return {
             "id": new_food.id,
             "nameFood": new_food.nameFood,
@@ -499,31 +512,55 @@ def create_food_item(food_item: FoodItemCreate, db: Session = Depends(get_db)):
 def create_eating_record(record: EatingRecordCreate, db: Session = Depends(get_db)):
     logger.info(f"Received record: {record}")
     try:
+        # Проверяем обязательные поля
+        if not record.user_id or not record.date or not record.meal_type:
+            raise HTTPException(status_code=400, detail="Missing required fields")
+
         # Проверяем существование пользователя
         user = db.query(User).filter(User.id == record.user_id).first()
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
 
-        # Для воды (food_id = 0) не проверяем существование продукта
+        # Для воды (food_id = 0) пропускаем проверку продукта
         food = None
         if record.food_id != 0:
             food = db.query(Food).filter(Food.id == record.food_id).first()
             if not food:
                 raise HTTPException(status_code=404, detail="Food not found")
 
-        # Парсим дату (игнорируем время, если оно есть)
-        date_str = record.date.split()[0]  # Берем только часть до пробела
-        date_obj = datetime.strptime(date_str, "%Y-%m-%d").date()
+        # Парсим дату (поддерживаем несколько форматов)
+        try:
+            date_obj = datetime.strptime(record.date, "%Y-%m-%d %H:%M:%S")
+        except ValueError:
+            try:
+                date_obj = datetime.strptime(record.date, "%Y-%m-%d %H:%M")
+            except ValueError:
+                try:
+                    date_obj = datetime.strptime(record.date, "%Y-%m-%d")
+                except ValueError as e:
+                    raise HTTPException(status_code=400, detail=f"Invalid date format: {record.date}")
+
+        # Рассчитываем калории и БЖУ (для воды - нули)
+        callories = 0
+        proteins = 0
+        fats = 0
+        carbs = 0
+
+        if food:
+            callories = food.callories * record.quantity / 100
+            proteins = food.squirrels * record.quantity / 100
+            fats = food.fats * record.quantity / 100
+            carbs = food.carbohydrates * record.quantity / 100
 
         # Создаем запись
         new_record = Eating(
             userID=record.user_id,
             foodId=record.food_id,
             date=date_obj,
-            callories=food.callories * record.quantity / 100 if food else 0,
-            squirrels=food.squirrels * record.quantity / 100 if food else 0,
-            fats=food.fats * record.quantity / 100 if food else 0,
-            carbohydrates=food.carbohydrates * record.quantity / 100 if food else 0,
+            callories=callories,
+            squirrels=proteins,
+            fats=fats,
+            carbohydrates=carbs,
             mealType=record.meal_type,
             quantity=record.quantity
         )
@@ -533,18 +570,21 @@ def create_eating_record(record: EatingRecordCreate, db: Session = Depends(get_d
         db.refresh(new_record)
 
         return {
+            "id": new_record.id,
             "user_id": new_record.userID,
             "food_id": new_record.foodId,
-            "date": new_record.date.strftime("%Y-%m-%d"),
+            "date": new_record.date.strftime("%Y-%m-%d %H:%M:%S"),
             "meal_type": new_record.mealType,
             "quantity": new_record.quantity,
             "callories": new_record.callories,
             "proteins": new_record.squirrels,
             "fats": new_record.fats,
-            "carbohydrates": new_record.carbohydrates
+            "carbohydrates": new_record.carbohydrates,
+            "food_name": food.nameFood if food else "Вода"
         }
     except Exception as e:
         db.rollback()
+        logger.error(f"Error creating eating record: {str(e)}")
         raise HTTPException(status_code=400, detail=str(e))
 
 
@@ -563,30 +603,39 @@ def search_food_items(query: str = "", db: Session = Depends(get_db)):
 
 @app.get("/users/{user_id}/eating-records")
 def get_eating_records(
-    user_id: int,
-    date: str,  # Формат "yyyy-MM-dd"
-    db: Session = Depends(get_db)
+        user_id: int,
+        date: str,  # Формат "yyyy-MM-dd"
+        db: Session = Depends(get_db)
 ):
     try:
-        # Используем правильный метод фильтрации для даты
-        records = db.query(Eating)\
-            .filter(Eating.userID == user_id)\
-            .filter(Eating.date >= date + " 00:00:00")\
-            .filter(Eating.date <= date + " 23:59:59")\
+        records = db.query(Eating) \
+            .filter(Eating.userID == user_id) \
+            .filter(Eating.date >= date + " 00:00:00") \
+            .filter(Eating.date <= date + " 23:59:59") \
             .all()
 
-        return [{
-            "id": r.id,
-            "user_id": r.userID,
-            "food_id": r.foodId,
-            "date": r.date.strftime("%Y-%m-%d %H:%M:%S"),
-            "meal_type": r.mealType,
-            "quantity": r.quantity,
-            "calories": r.callories,
-            "proteins": r.squirrels,
-            "fats": r.fats,
-            "carbohydrates": r.carbohydrates
-        } for r in records]
+        result = []
+        for record in records:
+            food_name = ""
+            if record.foodId != 0:  # Если это не вода
+                food = db.query(Food).filter(Food.id == record.foodId).first()
+                food_name = food.nameFood if food else "Неизвестный продукт"
+
+            result.append({
+                "id": record.id,
+                "user_id": record.userID,
+                "food_id": record.foodId,
+                "food_name": food_name,
+                "date": record.date.strftime("%Y-%m-%d %H:%M:%S"),
+                "meal_type": record.mealType,
+                "quantity": record.quantity,
+                "callories": record.callories,
+                "squirrels": record.squirrels,
+                "fats": record.fats,
+                "carbohydrates": record.carbohydrates
+            })
+
+        return result
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 

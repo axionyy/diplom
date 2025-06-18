@@ -117,16 +117,22 @@ public class WaterActivity extends AppCompatActivity {
         AuthManager authManager = new AuthManager(this);
         int userId = authManager.getUserId();
 
-        // Отправляем только дату (без времени) в формате "yyyy-MM-dd"
-        String dateForDb = date;
+        // Форматируем дату и время в правильный формат
+        String dateTime = date + " " + time + ":00"; // Формат: "YYYY-MM-DD HH:MM:00"
 
         EatingRecord record = new EatingRecord(
                 userId,
                 0, // food_id = 0 для воды
-                dateForDb,
+                dateTime,
                 "water",
-                (float) amount
+                amount
         );
+
+        // Явно устанавливаем нулевые значения
+        record.setCallories(0);
+        record.setProteins(0);
+        record.setFats(0);
+        record.setCarbohydrates(0);
 
         IUser userApi = RetroFit.getClient().create(IUser.class);
         Call<EatingRecord> call = userApi.createEatingRecord(record);
@@ -139,7 +145,8 @@ public class WaterActivity extends AppCompatActivity {
                     loadWaterRecords();
                 } else {
                     try {
-                        String errorBody = response.errorBody() != null ? response.errorBody().string() : "Unknown error";
+                        String errorBody = response.errorBody() != null ?
+                                response.errorBody().string() : "Unknown error (" + response.code() + ")";
                         Log.e(TAG, "Ошибка сохранения: " + errorBody);
                         Toast.makeText(WaterActivity.this,
                                 "Ошибка: " + errorBody, Toast.LENGTH_LONG).show();

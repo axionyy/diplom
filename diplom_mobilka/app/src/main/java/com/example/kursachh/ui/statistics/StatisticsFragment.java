@@ -1,8 +1,8 @@
 package com.example.kursachh.ui.statistics;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +12,12 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.kursachh.AuthManager;
+import com.example.kursachh.R;
 import com.example.kursachh.databinding.FragmentStatisticsBinding;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 import Interface.IUser;
 import Model.User;
@@ -30,7 +35,7 @@ public class StatisticsFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        authManager = new AuthManager(context); // Инициализируем authManager здесь
+        authManager = new AuthManager(context);
     }
 
     @Override
@@ -41,10 +46,8 @@ public class StatisticsFragment extends Fragment {
 
         statisticsViewModel = new ViewModelProvider(this).get(StatisticsViewModel.class);
 
-        // Настройка наблюдателей
         setupObservers();
-
-        // Загрузка данных пользователя
+        setupDateSelector();
         loadUserData();
 
         return root;
@@ -65,6 +68,57 @@ public class StatisticsFragment extends Fragment {
 
         statisticsViewModel.getWaterRemaining().observe(getViewLifecycleOwner(),
                 remaining -> binding.waterRemaining.setText(remaining));
+
+        statisticsViewModel.getCaloriesConsumed().observe(getViewLifecycleOwner(),
+                consumed -> binding.caloriesConsumedNum.setText(consumed));
+
+        statisticsViewModel.getCaloriesRemaining().observe(getViewLifecycleOwner(),
+                remaining -> binding.caloriesRemainingNum.setText(remaining));
+    }
+
+    private void showDatePickerDialog() {
+        final Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                requireContext(),
+                R.style.CustomDatePickerDialog,
+                (view, selectedYear, selectedMonth, selectedDay) -> {
+                    Calendar selectedDate = Calendar.getInstance();
+                    selectedDate.set(selectedYear, selectedMonth, selectedDay);
+
+                    String formattedDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                            .format(selectedDate.getTime());
+                    statisticsViewModel.setSelectedDate(formattedDate);
+
+                    if (isToday(selectedDate)) {
+                        binding.selectedDateText.setText("Сегодня");
+                    } else {
+                        binding.selectedDateText.setText(
+                                new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+                                        .format(selectedDate.getTime()));
+                    }
+
+                    loadConsumptionData();
+                },
+                year, month, day);
+
+        datePickerDialog.getDatePicker().setMaxDate(c.getTimeInMillis());
+        datePickerDialog.show();
+    }
+
+    private boolean isToday(Calendar date) {
+        Calendar today = Calendar.getInstance();
+        return date.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
+                date.get(Calendar.MONTH) == today.get(Calendar.MONTH) &&
+                date.get(Calendar.DAY_OF_MONTH) == today.get(Calendar.DAY_OF_MONTH);
+    }
+
+    private void setupDateSelector() {
+        binding.calendarButton.setOnClickListener(v -> showDatePickerDialog());
+        binding.selectedDateText.setText("Сегодня");
     }
 
     private void loadUserData() {
@@ -73,31 +127,24 @@ public class StatisticsFragment extends Fragment {
         }
 
         int userId = authManager.getUserId();
-        Log.d("StatisticsFragment", "User ID: " + userId);
-
         if (userId == -1) {
             showError("Пользователь не авторизован");
             return;
         }
 
         IUser userApi = RetroFit.getClient().create(IUser.class);
-
-        // Загружаем данные пользователя
         Call<User> call = userApi.getUser(userId);
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     User user = response.body();
-                    Log.d("StatisticsFragment", "User data: " + user.toString());
-
                     if (user.getHeight() == null || user.getWeight() == null ||
                             user.getBirthday() == null || user.isGender() == null) {
                         showError("Неполные данные пользователя");
                         return;
                     }
 
-                    // Расчет всех показателей
                     statisticsViewModel.calculateUserStats(
                             user.getHeight(),
                             user.getWeight(),
@@ -105,20 +152,26 @@ public class StatisticsFragment extends Fragment {
                             user.isGender()
                     );
 
-                    // Обновляем данные о потребленной воде
-                    statisticsViewModel.updateWaterStats(userId, userApi);
-                } else {
-                    showError("Ошибка загрузки данных");
-                    Log.e("Statistics", "Ошибка ответа: " + response.code());
+                    loadConsumptionData();
                 }
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
                 showError("Нет соединения");
-                Log.e("Statistics", "Ошибка сети", t);
             }
         });
+    }
+
+    private void loadConsumptionData() {
+        if (authManager != null) {
+            int userId = authManager.getUserId();
+            if (userId != -1) {
+                IUser userApi = RetroFit.getClient().create(IUser.class);
+                statisticsViewModel.loadWaterData(userId, userApi);
+                statisticsViewModel.loadCaloriesData(userId, userApi);
+            }
+        }
     }
 
     private void showError(String message) {
@@ -131,17 +184,5 @@ public class StatisticsFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (authManager != null && statisticsViewModel != null) {
-            int userId = authManager.getUserId();
-            if (userId != -1) {
-                IUser userApi = RetroFit.getClient().create(IUser.class);
-                statisticsViewModel.updateWaterStats(userId, userApi);
-            }
-        }
     }
 }

@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -19,10 +20,10 @@ import com.example.kursachh.R;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 import Interface.IUser;
 import Model.EatingRecord;
@@ -36,24 +37,35 @@ public class MealActivity extends AppCompatActivity {
     private static final String TAG = "MealActivity";
     public static final String MEAL_TYPE = "meal_type";
 
+    private RecyclerView mealRecyclerView;
+    private MealAdapter mealAdapter;
+    private List<EatingRecord> mealRecords = new ArrayList<>();
+    private TextView totalCaloriesView;
+    private String currentMealType;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meal);
 
-        setupViews();
-        loadEatingRecords();
-
-    }
-
-    private void setupViews() {
-        String mealType = getIntent().getStringExtra(MEAL_TYPE);
-        if (mealType == null) {
+        currentMealType = getIntent().getStringExtra(MEAL_TYPE);
+        if (currentMealType == null) {
             finish();
             return;
         }
-        setTitle(mealType);
 
+        setupViews();
+        setupRecyclerView();
+        loadEatingRecords();
+    }
+
+    private void setupRecyclerView() {
+        mealAdapter = new MealAdapter(mealRecords);
+        mealAdapter.setOnDeleteClickListener(this::deleteMealRecord);
+        mealRecyclerView.setAdapter(mealAdapter);
+    }
+
+    private void setupViews() {
         ImageView backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(v -> finish());
 
@@ -63,12 +75,11 @@ public class MealActivity extends AppCompatActivity {
         Button addFoodButton = findViewById(R.id.addFoodButton);
         addFoodButton.setOnClickListener(v -> showAddFoodDialog());
 
-        Button saveButton = findViewById(R.id.saveButton);
-        saveButton.setVisibility(View.GONE); // Сохраняем сразу
+        totalCaloriesView = findViewById(R.id.totalCalories);
+        mealRecyclerView = findViewById(R.id.foodList);
+        mealRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        RecyclerView foodList = findViewById(R.id.foodList);
-        foodList.setLayoutManager(new LinearLayoutManager(this));
-        // foodList.setAdapter(new FoodAdapter());
+        setTitle(currentMealType);
     }
 
     private void showAddCustomFoodDialog() {
@@ -179,6 +190,12 @@ public class MealActivity extends AppCompatActivity {
                     return;
                 }
 
+                // Проверяем формат времени
+                if (!time.matches("^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$")) {
+                    Toast.makeText(this, "Введите время в формате ЧЧ:ММ", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 addEatingRecord(foodId, quantity, date, time, mealType);
             } catch (NumberFormatException e) {
                 Toast.makeText(this, "Введите корректное количество", Toast.LENGTH_SHORT).show();
@@ -190,9 +207,19 @@ public class MealActivity extends AppCompatActivity {
     }
 
     private void addCustomFood(String name, float callories, float proteins, float fats, float carbs) {
-        // Создаем объект через пустой конструктор
+        // Проверка на валидность данных
+        if (name.isEmpty()) {
+            Toast.makeText(this, "Введите название продукта", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (callories <= 0 || proteins < 0 || fats < 0 || carbs < 0) {
+            Toast.makeText(this, "Значения должны быть положительными", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Создаем объект FoodItem
         FoodItem foodItem = new FoodItem();
-        // Устанавливаем значения через сеттеры
         foodItem.setNameFood(name);
         foodItem.setCallories(callories);
         foodItem.setProteins(proteins);
@@ -206,15 +233,17 @@ public class MealActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<FoodItem> call, Response<FoodItem> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    Toast.makeText(MealActivity.this, "Продукт добавлен", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MealActivity.this, "Продукт успешно добавлен", Toast.LENGTH_SHORT).show();
+                    // Показываем диалог для добавления этого продукта в прием пищи
                     showAddFoodDialog(response.body().getId());
                 } else {
                     try {
-                        String errorBody = response.errorBody().string();
-                        Log.e(TAG, "Ошибка: " + errorBody);
-                        Toast.makeText(MealActivity.this, "Ошибка: " + errorBody, Toast.LENGTH_SHORT).show();
+                        String errorBody = response.errorBody() != null ? response.errorBody().string() : "Unknown error";
+                        Log.e(TAG, "Ошибка сервера: " + errorBody);
+                        Toast.makeText(MealActivity.this, "Ошибка сервера: " + errorBody, Toast.LENGTH_LONG).show();
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        Log.e(TAG, "Ошибка чтения errorBody", e);
+                        Toast.makeText(MealActivity.this, "Ошибка: " + response.message(), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -222,7 +251,7 @@ public class MealActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<FoodItem> call, Throwable t) {
                 Log.e(TAG, "Ошибка сети", t);
-                Toast.makeText(MealActivity.this, "Ошибка сети", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MealActivity.this, "Ошибка сети: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -270,16 +299,22 @@ public class MealActivity extends AppCompatActivity {
         AuthManager authManager = new AuthManager(this);
         int userId = authManager.getUserId();
 
-        // Правильный формат даты/времени
-        String dateTime = date + "T" + time + ":00";
+        // Форматируем дату и время в правильный формат
+        String dateTime = date + " " + time + ":00"; // Формат: "YYYY-MM-DD HH:MM:00"
 
         EatingRecord record = new EatingRecord(
                 userId,
                 foodId,
                 dateTime,
-                mealType.toLowerCase(), // Приводим к нижнему регистру
+                mealType.toLowerCase(),
                 quantity
         );
+
+        // Устанавливаем нулевые значения для калорий (они будут рассчитаны на сервере)
+        record.setCallories(0);
+        record.setProteins(0);
+        record.setFats(0);
+        record.setCarbohydrates(0);
 
         IUser userApi = RetroFit.getClient().create(IUser.class);
         Call<EatingRecord> call = userApi.createEatingRecord(record);
@@ -287,19 +322,20 @@ public class MealActivity extends AppCompatActivity {
         call.enqueue(new Callback<EatingRecord>() {
             @Override
             public void onResponse(Call<EatingRecord> call, Response<EatingRecord> response) {
-                if (!response.isSuccessful()) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(MealActivity.this, "Приём пищи сохранён", Toast.LENGTH_SHORT).show();
+                    loadEatingRecords();
+                } else {
                     try {
-                        String errorBody = response.errorBody().string();
-                        Log.e(TAG, "Ошибка 422: " + errorBody);
+                        String errorBody = response.errorBody() != null ?
+                                response.errorBody().string() : "Unknown error (" + response.code() + ")";
+                        Log.e(TAG, "Ошибка сервера: " + errorBody);
                         Toast.makeText(MealActivity.this,
-                                "Ошибка данных: " + errorBody, Toast.LENGTH_LONG).show();
+                                "Ошибка: " + errorBody, Toast.LENGTH_LONG).show();
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        Log.e(TAG, "Error reading error body", e);
                     }
-                    return;
                 }
-                Toast.makeText(MealActivity.this, "Приём пищи сохранён", Toast.LENGTH_SHORT).show();
-                loadEatingRecords();
             }
 
             @Override
@@ -315,7 +351,6 @@ public class MealActivity extends AppCompatActivity {
         AuthManager authManager = new AuthManager(this);
         int userId = authManager.getUserId();
         String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-        String mealType = getIntent().getStringExtra(MEAL_TYPE);
 
         IUser userApi = RetroFit.getClient().create(IUser.class);
         Call<List<EatingRecord>> call = userApi.getEatingRecords(userId, currentDate);
@@ -324,25 +359,91 @@ public class MealActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<EatingRecord>> call, Response<List<EatingRecord>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    List<EatingRecord> records = response.body();
-                    // Фильтруем по типу приема пищи
-                    List<EatingRecord> filteredRecords = filterRecordsByMealType(records, mealType);
-                    updateFoodList(filteredRecords);
+                    mealRecords = filterRecordsByMealType(response.body(), currentMealType.toLowerCase());
+                    calculateAndDisplayTotals();
+                    mealAdapter.updateData(mealRecords);
+                } else {
+                    try {
+                        String errorBody = response.errorBody() != null ? response.errorBody().string() : "Unknown error";
+                        Toast.makeText(MealActivity.this, "Ошибка загрузки: " + errorBody, Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        Log.e(TAG, "Error reading error body", e);
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<List<EatingRecord>> call, Throwable t) {
                 Log.e(TAG, "Ошибка загрузки", t);
-                Toast.makeText(MealActivity.this, "Ошибка загрузки", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MealActivity.this, "Ошибка сети", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private List<EatingRecord> filterRecordsByMealType(List<EatingRecord> records, String mealType) {
-        return records.stream()
-                .filter(record -> mealType.equals(record.getMealType()))
-                .collect(Collectors.toList());
+        List<EatingRecord> filtered = new ArrayList<>();
+        for (EatingRecord record : records) {
+            if (mealType.equalsIgnoreCase(record.getMealType())) {
+                filtered.add(record);
+            }
+        }
+        return filtered;
+    }
+
+    private void calculateAndDisplayTotals() {
+        float totalCalories = 0;
+        float totalProteins = 0;
+        float totalFats = 0;
+        float totalCarbs = 0;
+
+        for (EatingRecord record : mealRecords) {
+            totalCalories += record.getCallories() != 0 ? record.getCallories() : 0;
+            totalProteins += record.getProteins() != 0 ? record.getProteins() : 0;
+            totalFats += record.getFats() != 0 ? record.getFats() : 0;
+            totalCarbs += record.getCarbohydrates() != 0 ? record.getCarbohydrates() : 0;
+        }
+
+        String summary = String.format(Locale.getDefault(),
+                "Всего: %.1f ккал\nБ:%.1fг Ж:%.1fг У:%.1fг",
+                totalCalories, totalProteins, totalFats, totalCarbs);
+
+        totalCaloriesView.setText(summary);
+    }
+
+    private void deleteMealRecord(EatingRecord record) {
+        AuthManager authManager = new AuthManager(this);
+        int userId = authManager.getUserId();
+
+        IUser userApi = RetroFit.getClient().create(IUser.class);
+        Call<Void> call = userApi.deleteEatingRecord(record.getId());
+
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    mealRecords.remove(record);
+                    mealAdapter.updateData(mealRecords);
+                    calculateAndDisplayTotals();
+                    Toast.makeText(MealActivity.this, "Запись удалена", Toast.LENGTH_SHORT).show();
+                } else {
+                    try {
+                        String errorBody = response.errorBody() != null ?
+                                response.errorBody().string() : "Unknown error";
+                        Toast.makeText(MealActivity.this,
+                                "Ошибка удаления: " + errorBody, Toast.LENGTH_LONG).show();
+                    } catch (IOException e) {
+                        Log.e(TAG, "Error reading error body", e);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(MealActivity.this,
+                        "Сетевая ошибка: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                Log.e(TAG, "Network error", t);
+            }
+        });
     }
 
     private void updateFoodList(List<EatingRecord> records) {

@@ -10,7 +10,7 @@
     <!-- Первый блок - нормы -->
     <LinearLayout
         android:id="@+id/linearNormCofs"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="100dp"
@@ -36,7 +36,7 @@
                 android:layout_toStartOf="@id/numberIMT"
                 android:text="@string/IMT_text_statistic"
                 android:textColor="?android:attr/textColorPrimary"
-                android:textSize="16sp" />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/numberIMT"
@@ -64,7 +64,7 @@
                 android:layout_toStartOf="@id/numberWater"
                 android:text="@string/water_norm_text_statistic"
                 android:textColor="?android:attr/textColorPrimary"
-                android:textSize="16sp"/>
+                android:textSize="20sp"/>
 
             <TextView
                 android:id="@+id/numberWater"
@@ -90,7 +90,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_toStartOf="@id/numberCalloriesNorm"
                 android:text="@string/calories_norm_text_statistic"
-                android:textSize="16sp"
+                android:textSize="20sp"
                 android:textColor="?android:attr/textColorPrimary" />
 
             <TextView
@@ -105,12 +105,41 @@
         </RelativeLayout>
     </LinearLayout>
 
+    <!-- Блок выбора даты -->
+    <LinearLayout
+        android:id="@+id/dateSelectorLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal"
+        android:background="@color/green"
+        android:padding="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearNormCofs">
+
+        <ImageButton
+            android:id="@+id/calendarButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/baseline_calendar_month_24"
+            android:background="?attr/selectableItemBackgroundBorderless"/>
+
+        <TextView
+            android:id="@+id/selectedDateText"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginStart="16dp"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="18sp"
+            android:text="Сегодня"/>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/calloriesConsumedLinear"
-        android:layout_width="370dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="100dp"
 
         android:background="@color/green"
         android:orientation="vertical"
@@ -178,9 +207,9 @@
 
     <LinearLayout
         android:id="@+id/waterConsumedLinear"
-        android:layout_width="370dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="40dp"
 
         android:background="@color/green"
         android:orientation="vertical"
