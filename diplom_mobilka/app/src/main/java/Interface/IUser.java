@@ -2,6 +2,8 @@ package Interface;
 
 import java.util.List;
 
+import Model.EatingRecord;
+import Model.FoodItem;
 import Model.Recipe;
 import Model.User;
 import Model.WeightRecord;
@@ -20,6 +22,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface IUser {
     @POST("login")
@@ -60,4 +63,20 @@ public interface IUser {
 
     @DELETE("recipes/{recipeId}")
     Call<Void> deleteRecipe(@Path("recipeId") int recipeId);
+
+    @POST("eating-records")
+    Call<EatingRecord> createEatingRecord(@Body EatingRecord record);
+
+    @GET("users/{userId}/eating-records")
+    Call<List<EatingRecord>> getEatingRecords(@Path("userId") int userId,
+                                              @Query("date") String date);
+
+    @POST("food-items")
+    Call<FoodItem> createFoodItem(@Body FoodItem foodItem);
+
+    @GET("food-items/search")
+    Call<List<FoodItem>> searchFoodItems(@Query("query") String query);
+
+    @DELETE("eating-records/{recordId}")
+    Call<Void> deleteEatingRecord(@Path("recordId") int recordId);
 }

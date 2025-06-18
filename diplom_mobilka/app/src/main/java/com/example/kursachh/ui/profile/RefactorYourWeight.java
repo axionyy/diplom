@@ -78,14 +78,23 @@ public class RefactorYourWeight extends AppCompatActivity {
         ImageView imageBackRefInfToProfile = findViewById(R.id.imageBackRefInf);
         imageBackRefInfToProfile.setOnClickListener(v -> finish());
 
-        loadInitialWeight();
-        loadCurrentWeight();
         loadSavedRecords();
+        loadInitialWeight();
         loadWeightHistoryFromServer();
+        loadCurrentWeight();
+
+    }
+
+    private String getInitialWeightKey() {
+        return "initial_weight_" + authManager.getUserId();
+    }
+
+    private String getWeightRecordsKey() {
+        return "weight_records_" + authManager.getUserId();
     }
 
     private void loadInitialWeight() {
-        initialWeight = sharedPreferences.getFloat(KEY_INITIAL_WEIGHT, 0f);
+        initialWeight = sharedPreferences.getFloat(getInitialWeightKey(), 0f);
         initialWeightValue.setText(String.format(Locale.getDefault(), "%.1f кг", initialWeight));
     }
 
@@ -100,10 +109,12 @@ public class RefactorYourWeight extends AppCompatActivity {
                     User user = response.body();
                     currentWeight = user.weight;
 
-                    // Сохраняем начальный вес при первом запуске
-                    if (initialWeight == 0f) {
+                    // Сохраняем начальный вес только если он еще не сохранен для этого пользователя
+                    if (sharedPreferences.getFloat(getInitialWeightKey(), 0f) == 0f) {
                         initialWeight = currentWeight;
-                        sharedPreferences.edit().putFloat(KEY_INITIAL_WEIGHT, initialWeight).apply();
+                        sharedPreferences.edit()
+                                .putFloat(getInitialWeightKey(), initialWeight)
+                                .apply();
                         initialWeightValue.setText(String.format(Locale.getDefault(), "%.1f кг", initialWeight));
                     }
                 }
@@ -254,6 +265,7 @@ public class RefactorYourWeight extends AppCompatActivity {
                                 record.getWeight()
                         ));
                     }
+                    sortRecordsByDate();
                     saveRecords();
                     displayAllRecords();
 
@@ -304,18 +316,21 @@ public class RefactorYourWeight extends AppCompatActivity {
     }
 
     private void loadSavedRecords() {
-        String json = sharedPreferences.getString(KEY_WEIGHT_RECORDS, null);
+        String json = sharedPreferences.getString(getWeightRecordsKey(), null);
         if (json != null) {
             Type type = new TypeToken<List<WeightRecord>>() {}.getType();
             weightRecords = new Gson().fromJson(json, type);
+            sortRecordsByDate(); // Сортируем при загрузке
             displayAllRecords();
         }
     }
 
     private void saveRecords() {
+        sortRecordsByDate();
+
         SharedPreferences.Editor editor = sharedPreferences.edit();
         String json = new Gson().toJson(weightRecords);
-        editor.putString(KEY_WEIGHT_RECORDS, json);
+        editor.putString(getWeightRecordsKey(), json);
         editor.apply();
     }
 
@@ -323,20 +338,25 @@ public class RefactorYourWeight extends AppCompatActivity {
         weightRecordsContainer.removeAllViews();
 
         // Сортируем записи по дате (новые сверху)
+        sortRecordsByDate();
+
+        for (int i = 0; i < weightRecords.size(); i++) {
+            addWeightRecordView(weightRecords.get(i), i);
+        }
+    }
+
+    private void sortRecordsByDate() {
         Collections.sort(weightRecords, (r1, r2) -> {
             try {
                 SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
                 Date date1 = format.parse(r1.getDate());
                 Date date2 = format.parse(r2.getDate());
-                return date2.compareTo(date1);
+                return date2.compareTo(date1); // Сортировка по убыванию (новые сверху)
             } catch (ParseException e) {
+                Log.e("Sorting", "Error parsing date", e);
                 return 0;
             }
         });
-
-        for (int i = 0; i < weightRecords.size(); i++) {
-            addWeightRecordView(weightRecords.get(i), i);
-        }
     }
 
     private void addWeightRecordView(WeightRecord record, int position) {
@@ -349,9 +369,12 @@ public class RefactorYourWeight extends AppCompatActivity {
         dateView.setText(record.getDate());
         weightView.setText(String.format(Locale.getDefault(), "%.1f кг", record.getWeight()));
 
+        // Проверяем, является ли запись актуальной
+        boolean isMostRecent = position == 0;
+
         btnDelete.setOnClickListener(v -> {
-            if (position == 0) {
-                Toast.makeText(this, "Нельзя удалить актуальный вес", Toast.LENGTH_SHORT).show();
+            if (isMostRecent) {
+                Toast.makeText(this, "Нельзя удалить актуальный вес, сначала добавьте новый", Toast.LENGTH_SHORT).show();
                 return;
             }
 

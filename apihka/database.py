@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, Date, Time, Float, ForeignKey, Boolean, Text
+from sqlalchemy import create_engine, Column, Integer, String, Date, DateTime, Float, ForeignKey, Boolean, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -10,13 +10,14 @@ class Eating(Base):
 
     id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
     userID = Column(Integer, ForeignKey('users.id'), nullable=False)
-    water = Column(Boolean, nullable=True)
+    foodId = Column(Integer, ForeignKey('food.id'), nullable=False)
     callories = Column(Float, nullable=True)
     squirrels = Column(Float, nullable=True)
     fats = Column(Float, nullable=True)
     carbohydrates = Column(Float, nullable=True)
-    date = Column(Date, nullable=False)
-    foodId = Column(Integer, ForeignKey('food.id'), nullable=False)
+    date = Column(DateTime, nullable=False)
+    mealType = Column(String(20), nullable=False)  # Добавить тип приема пищи
+    quantity = Column(Float, nullable=False)  # Добавить количество
 
     user = relationship("User", back_populates="eatings")
     food = relationship("Food", back_populates="eatings")
@@ -26,7 +27,6 @@ class Food(Base):
     __tablename__ = 'food'
 
     id = Column(Integer, primary_key=True, nullable=False, autoincrement=True)
-    photo = Column(Text, nullable=True)
     nameFood = Column(String(50), nullable=False)
     callories = Column(Float, nullable=True)
     squirrels = Column(Float, nullable=True)

@@ -75,6 +75,11 @@
 
     <string name="IMT_text_statistic">"Индекс массы тела (ИМТ):"</string>
     <string name="water_norm_text_statistic">"Норма потребления воды:"</string>
+    <string name="calories_norm_text_statistic">"Норма потребления ккал:"</string>
+
+    <string name="calories_consumed_text">"Потребленные калории:"</string>
+    <string name="water_consumed_text">"Потребленные вода:"</string>
+    <string name="remaining_text">"Осталось:"</string>
 
     <string name="startWeightUserWindowText">"Начальный вес:"</string>
     <string name="updateWeightUserWindowText">"Показатель веса:"</string>

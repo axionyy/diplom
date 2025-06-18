@@ -17,4 +17,8 @@
         <item name="android:backgroundDimAmount">0.5</item>
     </style>
 
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <item name="android:windowBackground">@color/white</item>
+    </style>
+
 </resources>

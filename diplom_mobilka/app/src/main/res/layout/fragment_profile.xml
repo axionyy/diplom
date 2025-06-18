@@ -24,7 +24,7 @@
         android:id="@+id/iconProfileImage"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="80dp"
         android:layout_marginStart="50dp"
 
         android:src="@drawable/ic_profile"
@@ -36,7 +36,7 @@
         android:id="@+id/refactorProfileButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="40dp"
 
         android:text="@string/refactorProfileButtonText"
         android:backgroundTint="@color/blue"
@@ -53,7 +53,7 @@
         android:layout_width="350dp"
         android:layout_height="40dp"
         android:orientation="horizontal"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="30dp"
 
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -85,7 +85,7 @@
         android:layout_width="350dp"
         android:layout_height="40dp"
         android:orientation="horizontal"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
 
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -117,7 +117,7 @@
         android:layout_width="350dp"
         android:layout_height="40dp"
         android:orientation="horizontal"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
 
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

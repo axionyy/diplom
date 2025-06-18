@@ -30,4 +30,15 @@ public class User implements Serializable {
 
     @SerializedName("password")
     public String password;
+
+    // Геттеры
+    public int getId() { return id; }
+    public String getName() { return name; }
+    public String getSurname() { return surname; }
+    public Float getHeight() { return height; }
+    public Float getWeight() { return weight; }
+    public Boolean isGender() { return gender; }
+    public String getBirthday() { return birthday; }
+    public String getLogin() { return login; }
+    public String getPassword() { return password; }
 }

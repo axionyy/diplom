@@ -99,6 +99,22 @@ class RecipeUpdateRequest(BaseModel):
     carbohydrates: float
 
 
+class FoodItemCreate(BaseModel):
+    nameFood: str
+    callories: float
+    proteins: float
+    fats: float
+    carbohydrates: float
+
+
+class EatingRecordCreate(BaseModel):
+    user_id: int
+    food_id: int  # 0 для воды
+    date: str  # Формат "ГГГГ-ММ-ДД ЧЧ:ММ"
+    meal_type: str  # Добавить тип приема пищи
+    quantity: float  # В граммах или мл для воды
+
+
 @app.post("/login")
 def login(user_login: UserLogin, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.login == user_login.login).first()
@@ -159,8 +175,8 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
         "name": user.name,
         "login": user.login,
         "birthday": user.birthday.strftime("%Y-%m-%d") if user.birthday else None,
-        "height": user.height,  # Добавлено поле роста
-        "surname": user.surname,  # Также добавьте другие нужные поля
+        "height": user.height,
+        "surname": user.surname,
         "weight": user.weight,
         "gender": user.gender
     }
@@ -448,6 +464,143 @@ def delete_recipe(recipe_id: int, db: Session = Depends(get_db)):
         db.delete(db_recipe)
         db.commit()
         return {"message": "Рецепт успешно удален"}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.post("/food-items")
+def create_food_item(food_item: FoodItemCreate, db: Session = Depends(get_db)):
+    try:
+        new_food = Food(
+            nameFood=food_item.nameFood,
+            callories=food_item.calories,
+            squirrels=food_item.proteins,
+            fats=food_item.fats,
+            carbohydrates=food_item.carbohydrates
+        )
+        db.add(new_food)
+        db.commit()
+        db.refresh(new_food)
+        return {
+            "id": new_food.id,
+            "nameFood": new_food.nameFood,
+            "callories": new_food.callories,
+            "proteins": new_food.squirrels,
+            "fats": new_food.fats,
+            "carbohydrates": new_food.carbohydrates
+        }
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.post("/eating-records")
+def create_eating_record(record: EatingRecordCreate, db: Session = Depends(get_db)):
+    logger.info(f"Received record: {record}")
+    try:
+        # Проверяем существование пользователя
+        user = db.query(User).filter(User.id == record.user_id).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        # Для воды (food_id = 0) не проверяем существование продукта
+        food = None
+        if record.food_id != 0:
+            food = db.query(Food).filter(Food.id == record.food_id).first()
+            if not food:
+                raise HTTPException(status_code=404, detail="Food not found")
+
+        # Парсим дату (игнорируем время, если оно есть)
+        date_str = record.date.split()[0]  # Берем только часть до пробела
+        date_obj = datetime.strptime(date_str, "%Y-%m-%d").date()
+
+        # Создаем запись
+        new_record = Eating(
+            userID=record.user_id,
+            foodId=record.food_id,
+            date=date_obj,
+            callories=food.callories * record.quantity / 100 if food else 0,
+            squirrels=food.squirrels * record.quantity / 100 if food else 0,
+            fats=food.fats * record.quantity / 100 if food else 0,
+            carbohydrates=food.carbohydrates * record.quantity / 100 if food else 0,
+            mealType=record.meal_type,
+            quantity=record.quantity
+        )
+
+        db.add(new_record)
+        db.commit()
+        db.refresh(new_record)
+
+        return {
+            "user_id": new_record.userID,
+            "food_id": new_record.foodId,
+            "date": new_record.date.strftime("%Y-%m-%d"),
+            "meal_type": new_record.mealType,
+            "quantity": new_record.quantity,
+            "callories": new_record.callories,
+            "proteins": new_record.squirrels,
+            "fats": new_record.fats,
+            "carbohydrates": new_record.carbohydrates
+        }
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.get("/food-items/search")
+def search_food_items(query: str = "", db: Session = Depends(get_db)):
+    foods = db.query(Food).filter(Food.nameFood.ilike(f"%{query}%")).all()
+    return [{
+        "id": f.id,
+        "nameFood": f.nameFood,
+        "callories": f.callories,
+        "proteins": f.squirrels,
+        "fats": f.fats,
+        "carbohydrates": f.carbohydrates
+    } for f in foods]
+
+
+@app.get("/users/{user_id}/eating-records")
+def get_eating_records(
+    user_id: int,
+    date: str,  # Формат "yyyy-MM-dd"
+    db: Session = Depends(get_db)
+):
+    try:
+        # Используем правильный метод фильтрации для даты
+        records = db.query(Eating)\
+            .filter(Eating.userID == user_id)\
+            .filter(Eating.date >= date + " 00:00:00")\
+            .filter(Eating.date <= date + " 23:59:59")\
+            .all()
+
+        return [{
+            "id": r.id,
+            "user_id": r.userID,
+            "food_id": r.foodId,
+            "date": r.date.strftime("%Y-%m-%d %H:%M:%S"),
+            "meal_type": r.mealType,
+            "quantity": r.quantity,
+            "calories": r.callories,
+            "proteins": r.squirrels,
+            "fats": r.fats,
+            "carbohydrates": r.carbohydrates
+        } for r in records]
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.delete("/eating-records/{record_id}")
+def delete_eating_record(record_id: int, db: Session = Depends(get_db)):
+    try:
+        record = db.query(Eating).filter(Eating.id == record_id).first()
+        if not record:
+            raise HTTPException(status_code=404, detail="Record not found")
+
+        db.delete(record)
+        db.commit()
+        return {"message": "Eating record deleted successfully"}
     except Exception as e:
         db.rollback()
         raise HTTPException(status_code=400, detail=str(e))

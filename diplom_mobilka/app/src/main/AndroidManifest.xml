@@ -38,6 +38,10 @@
         <activity
             android:name=".ui.profile.SettingsActivity"
             android:exported="false" />
+        <activity android:name=".ui.diary.WaterActivity"
+            android:parentActivityName=".ui.diary.DiaryFragment"/>
+        <activity android:name=".ui.diary.MealActivity"
+            android:parentActivityName=".ui.diary.DiaryFragment"/>
         <activity
             android:name=".MainActivity"
             android:exported="true">
