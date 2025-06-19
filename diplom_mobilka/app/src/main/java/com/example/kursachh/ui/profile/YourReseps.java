@@ -2,6 +2,7 @@ package com.example.kursachh.ui.profile;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -225,6 +226,9 @@ public class YourReseps extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         if (response.isSuccessful()) {
+                            // Обновляем достижение за добавление рецепта
+                            AchievementsActivity.updateAchievementProgress(YourReseps.this, "recipe_master", 1);
+
                             Toast.makeText(YourReseps.this, "Рецепт успешно сохранен", Toast.LENGTH_SHORT).show();
                             loadUserRecipes();
                             dialog.dismiss();
@@ -277,19 +281,16 @@ public class YourReseps extends AppCompatActivity {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
-                    // Удаляем из списка и обновляем UI
+                    // Обновляем счетчик рецептов
+                    SharedPreferences prefs = getSharedPreferences(
+                            "user_" + authManager.getUserId() + "_achievements", MODE_PRIVATE);
+
+                    int currentCount = prefs.getInt("recipe_master", 0);
+                    prefs.edit().putInt("recipe_master", Math.max(0, currentCount - 1)).apply();
+
                     recipesList.remove(position);
                     displayRecipes();
                     Toast.makeText(YourReseps.this, "Рецепт удален", Toast.LENGTH_SHORT).show();
-                } else {
-                    try {
-                        String errorBody = response.errorBody().string();
-                        Toast.makeText(YourReseps.this,
-                                "Ошибка удаления: " + errorBody, Toast.LENGTH_LONG).show();
-                    } catch (IOException e) {
-                        Toast.makeText(YourReseps.this,
-                                "Ошибка удаления рецепта", Toast.LENGTH_SHORT).show();
-                    }
                 }
             }
 

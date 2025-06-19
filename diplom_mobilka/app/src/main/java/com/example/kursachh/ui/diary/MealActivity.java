@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.kursachh.AuthManager;
 import com.example.kursachh.R;
+import com.example.kursachh.ui.profile.AchievementsActivity;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -323,16 +324,21 @@ public class MealActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<EatingRecord> call, Response<EatingRecord> response) {
                 if (response.isSuccessful()) {
+                    // Обновляем достижение за добавление записи в дневник
+                    AchievementsActivity.updateAchievementProgress(MealActivity.this, "food_diary_expert", 1);
+
                     Toast.makeText(MealActivity.this, "Приём пищи сохранён", Toast.LENGTH_SHORT).show();
                     loadEatingRecords();
-                } else {
+                }
+                else {
                     try {
                         String errorBody = response.errorBody() != null ?
                                 response.errorBody().string() : "Unknown error (" + response.code() + ")";
                         Log.e(TAG, "Ошибка сервера: " + errorBody);
                         Toast.makeText(MealActivity.this,
                                 "Ошибка: " + errorBody, Toast.LENGTH_LONG).show();
-                    } catch (IOException e) {
+                    }
+                    catch (IOException e) {
                         Log.e(TAG, "Error reading error body", e);
                     }
                 }

@@ -1,6 +1,10 @@
 package com.example.kursachh;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,6 +13,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.kursachh.ui.profile.AchievementsActivity;
 
 import Interface.IUser;
 import Model.User;
@@ -23,16 +29,39 @@ public class MainActivity extends AppCompatActivity {
 
     private AuthManager authManager;
     private DataManager dataManager;
+    private SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authorization);
 
+        // Проверка разрешений для уведомлений (для Android 13+)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) !=
+                    PackageManager.PERMISSION_GRANTED) {
+                // Запрашиваем разрешение, но продолжаем работу даже если его не дали
+                requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
+            }
+        }
+
         authManager = new AuthManager(this);
         dataManager = new DataManager(this);
+        prefs = getSharedPreferences("app_prefs", MODE_PRIVATE);
 
         if (authManager.isLoggedIn()) {
+            int userId = authManager.getUserId();
+            SharedPreferences userPrefs = getSharedPreferences("user_" + userId, MODE_PRIVATE);
+
+            // Проверка ежедневного входа
+            if (!userPrefs.getBoolean("logged_today", false)) {
+                AchievementsActivity.updateAchievementProgress(this, "weekly_streak", 1);
+                userPrefs.edit()
+                        .putBoolean("logged_today", true)
+                        .putLong("last_login", System.currentTimeMillis())
+                        .apply();
+            }
+
             Intent intent = new Intent(this, NavigationRun.class);
             startActivity(intent);
             finish();
@@ -71,6 +100,13 @@ public class MainActivity extends AppCompatActivity {
                             dataManager.saveData(user);
 
                             Log.d("Authorization", "Saved user ID: " + authManager.getUserId()); // Проверка сохранения
+
+                            // Проверка первого входа
+                            SharedPreferences userPrefs = getSharedPreferences("user_" + user.id, MODE_PRIVATE);
+                            if (!userPrefs.getBoolean("first_entry", false)) {
+                                AchievementsActivity.updateAchievementProgress(MainActivity.this, "first_entry", 1);
+                                userPrefs.edit().putBoolean("first_entry", true).apply();
+                            }
 
                             // Переход на главный экран
                             Intent intent = new Intent(MainActivity.this, NavigationRun.class);

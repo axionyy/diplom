@@ -653,3 +653,9 @@ def delete_eating_record(record_id: int, db: Session = Depends(get_db)):
     except Exception as e:
         db.rollback()
         raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.get("/check-login/{login}")
+def check_login_availability(login: str, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.login == login).first()
+    return {"available": user is None}

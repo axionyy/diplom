@@ -9,10 +9,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.Map;
+
 import Interface.IUser;
 import Model.User;
 import ModelRequest.UserLogin;
-import ModelRequest.UserRegister;
 import RetrofitModels.RetroFit;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,8 +33,7 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     public void Autorization(View v) {
-        Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
-        startActivity(intent);
+        startActivity(new Intent(this, MainActivity.class));
     }
 
     public void RegistrationNextPage2(View v) {
@@ -52,6 +52,52 @@ public class RegistrationActivity extends AppCompatActivity {
         } else {
             checkLoginAvailability(login, password, name, surname);
         }
+        // Проверяем доступность логина
+        userService.checkLoginAvailability(login).enqueue(new Callback<Map<String, Boolean>>() {
+            @Override
+            public void onResponse(Call<Map<String, Boolean>> call, Response<Map<String, Boolean>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    boolean isAvailable = response.body().get("available");
+                    if (isAvailable) {
+                        proceedToNextStep(login);
+                    } else {
+                        Toast.makeText(RegistrationActivity.this,
+                                "Логин уже занят", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(RegistrationActivity.this,
+                            "Ошибка проверки логина", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Map<String, Boolean>> call, Throwable t) {
+                Toast.makeText(RegistrationActivity.this,
+                        "Ошибка сети: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void proceedToNextStep(String login) {
+        EditText passwordRegistration = findViewById(R.id.passwordInputRegistration);
+        EditText nameRegistration = findViewById(R.id.nameInputRegistration);
+        EditText surnameRegistration = findViewById(R.id.surnameInputRegistration);
+
+        String password = passwordRegistration.getText().toString().trim();
+        String name = nameRegistration.getText().toString().trim();
+        String surname = surnameRegistration.getText().toString().trim();
+
+        if (password.isEmpty() || name.isEmpty() || surname.isEmpty()) {
+            Toast.makeText(this, "Заполните все поля", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Intent intent = new Intent(this, RegistrationActivity2.class);
+        intent.putExtra("login", login);
+        intent.putExtra("password", password);
+        intent.putExtra("name", name);
+        intent.putExtra("surname", surname);
+        startActivity(intent);
     }
 
     private void checkLoginAvailability(String login, String password, String name, String surname) {

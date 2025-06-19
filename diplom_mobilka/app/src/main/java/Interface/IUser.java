@@ -1,6 +1,7 @@
 package Interface;
 
 import java.util.List;
+import java.util.Map;
 
 import Model.EatingRecord;
 import Model.FoodItem;
@@ -79,4 +80,7 @@ public interface IUser {
 
     @DELETE("eating-records/{recordId}")
     Call<Void> deleteEatingRecord(@Path("recordId") int recordId);
+
+    @GET("check-login/{login}")
+    Call<Map<String, Boolean>> checkLoginAvailability(@Path("login") String login);
 }
