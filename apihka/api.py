@@ -41,7 +41,7 @@ class UserRegister(BaseModel):
     birthday: str
     password: str
     login: str
-    photo: str = None  # Добавлено поле для фотографии пользователя
+    photo: str = None
 
 
 class UserUpdate(BaseModel):
@@ -205,7 +205,7 @@ def update_user(user_id: int, user_update: UserUpdate, db: Session = Depends(get
         if user_update.birthday is not None:
             user.birthday = user_update.birthday
         if user_update.password is not None:
-            user.password = user_update.password  # В реальности нужно хэшировать
+            user.password = user_update.password
 
         db.commit()
 
@@ -228,8 +228,6 @@ def verify_password(verify_request: VerifyPasswordRequest, db: Session = Depends
     if not user:
         return {"is_valid": False}
 
-    # В реальном приложении используйте хэширование:
-    # if not verify_password_hash(verify_request.password, user.password):
     if user.password != verify_request.password:
         return {"is_valid": False}
 
@@ -488,7 +486,7 @@ def create_food_item(food_item: FoodItemCreate, db: Session = Depends(get_db)):
             squirrels=food_item.proteins,
             fats=food_item.fats,
             carbohydrates=food_item.carbohydrates,
-            reciepID=None  # Явно указываем None для reciepID
+            reciepID=None
         )
 
         db.add(new_food)
@@ -659,3 +657,20 @@ def delete_eating_record(record_id: int, db: Session = Depends(get_db)):
 def check_login_availability(login: str, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.login == login).first()
     return {"available": user is None}
+
+
+@app.get("/recipes")
+def get_all_recipes(db: Session = Depends(get_db)):
+    recipes = db.query(Reciep).order_by(Reciep.dateCreate.desc()).all()
+    return [{
+        "id": r.id,
+        "name": r.name,
+        "photo": r.photo,
+        "callories": r.callories,
+        "components": r.components,
+        "steps": r.steps,
+        "squirrels": r.squirrels,
+        "fats": r.fats,
+        "carbohydrates": r.carbohydrates,
+        "dateCreate": r.dateCreate.strftime("%Y-%m-%d")
+    } for r in recipes]

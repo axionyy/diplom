@@ -16,8 +16,8 @@ class Eating(Base):
     fats = Column(Float, nullable=True)
     carbohydrates = Column(Float, nullable=True)
     date = Column(DateTime, nullable=False)
-    mealType = Column(String(20), nullable=False)  # Добавить тип приема пищи
-    quantity = Column(Float, nullable=False)  # Добавить количество
+    mealType = Column(String(20), nullable=False)
+    quantity = Column(Float, nullable=False)
 
     user = relationship("User", back_populates="eatings")
     food = relationship("Food", back_populates="eatings")
@@ -69,7 +69,7 @@ class User(Base):
     birthday = Column(Date, nullable=False)
     password = Column(String(50), nullable=False)
     login = Column(String(50), nullable=False)
-    photo = Column(Text, nullable=True)  # Добавлен столбец для фотографии пользователя
+    photo = Column(Text, nullable=True)
 
     eatings = relationship("Eating", back_populates="user")
     recieps = relationship("Reciep", back_populates="user")

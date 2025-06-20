@@ -83,4 +83,8 @@ public interface IUser {
 
     @GET("check-login/{login}")
     Call<Map<String, Boolean>> checkLoginAvailability(@Path("login") String login);
+
+    @GET("recipes")
+    Call<List<Recipe>> getAllRecipes();
+
 }
