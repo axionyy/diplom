@@ -20,23 +20,26 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class RegistrationActivity extends AppCompatActivity {
-
+    private static final String TAG = "RegistrationActivity";
     private IUser userService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
+        Log.d(TAG, "onCreate: Activity started");
 
         // Инициализация Retrofit и сервиса
         userService = RetroFit.getClient().create(IUser.class);
     }
 
     public void Autorization(View v) {
+        Log.d(TAG, "Autorization: Switching to MainActivity");
         startActivity(new Intent(this, MainActivity.class));
     }
 
     public void RegistrationNextPage2(View v) {
+        Log.d(TAG, "RegistrationNextPage2: Button clicked");
         EditText loginRegistration = findViewById(R.id.loginInputRegistration);
         EditText passwordRegistration = findViewById(R.id.passwordInputRegistration);
         EditText nameRegistration = findViewById(R.id.nameInputRegistration);
@@ -47,24 +50,32 @@ public class RegistrationActivity extends AppCompatActivity {
         String name = nameRegistration.getText().toString().trim();
         String surname = surnameRegistration.getText().toString().trim();
 
+        Log.d(TAG, "RegistrationNextPage2: login=" + login + ", name=" + name + ", surname=" + surname);
         if (login.isEmpty() || password.isEmpty() || name.isEmpty() || surname.isEmpty()) {
+            Log.w(TAG, "RegistrationNextPage2: Empty fields detected");
             Toast.makeText(this, "Пожалуйста, заполните все поля", Toast.LENGTH_SHORT).show();
         } else {
             checkLoginAvailability(login, password, name, surname);
         }
+
         // Проверяем доступность логина
+        Log.d(TAG, "RegistrationNextPage2: Checking login availability");
         userService.checkLoginAvailability(login).enqueue(new Callback<Map<String, Boolean>>() {
             @Override
             public void onResponse(Call<Map<String, Boolean>> call, Response<Map<String, Boolean>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     boolean isAvailable = response.body().get("available");
+                    Log.d(TAG, "onResponse: Login availability check - " + isAvailable);
                     if (isAvailable) {
+                        Log.d(TAG, "onResponse: Login available, proceeding to next step");
                         proceedToNextStep(login);
                     } else {
+                        Log.w(TAG, "onResponse: Login already taken");
                         Toast.makeText(RegistrationActivity.this,
                                 "Логин уже занят", Toast.LENGTH_SHORT).show();
                     }
                 } else {
+                    Log.e(TAG, "onResponse: Failed to check login availability. Code: " + response.code());
                     Toast.makeText(RegistrationActivity.this,
                             "Ошибка проверки логина", Toast.LENGTH_SHORT).show();
                 }
@@ -72,6 +83,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Map<String, Boolean>> call, Throwable t) {
+                Log.e(TAG, "onFailure: Network error while checking login", t);
                 Toast.makeText(RegistrationActivity.this,
                         "Ошибка сети: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
@@ -79,6 +91,7 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     private void proceedToNextStep(String login) {
+        Log.d(TAG, "proceedToNextStep: Preparing data for next activity");
         EditText passwordRegistration = findViewById(R.id.passwordInputRegistration);
         EditText nameRegistration = findViewById(R.id.nameInputRegistration);
         EditText surnameRegistration = findViewById(R.id.surnameInputRegistration);
@@ -88,10 +101,12 @@ public class RegistrationActivity extends AppCompatActivity {
         String surname = surnameRegistration.getText().toString().trim();
 
         if (password.isEmpty() || name.isEmpty() || surname.isEmpty()) {
+            Log.w(TAG, "proceedToNextStep: Empty fields in proceedToNextStep");
             Toast.makeText(this, "Заполните все поля", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        Log.d(TAG, "proceedToNextStep: Starting RegistrationActivity2");
         Intent intent = new Intent(this, RegistrationActivity2.class);
         intent.putExtra("login", login);
         intent.putExtra("password", password);

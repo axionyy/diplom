@@ -180,7 +180,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginStart="30dp"
 
-        android:hint="@string/passwordText"
+        android:hint="@string/passwordText11"
         android:textSize="25sp"
         android:textColor="?android:attr/textColorPrimary"
         android:background="@color/green"

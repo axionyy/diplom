@@ -27,6 +27,7 @@ import retrofit2.Response;
 
 public class RegistrationActivity2 extends AppCompatActivity {
 
+    private static final String TAG = "RegistrationActivity2";
     private String login, password, name, surname;
     private IUser userService;
 
@@ -35,6 +36,7 @@ public class RegistrationActivity2 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration2);
+        Log.d(TAG, "onCreate: Activity started");
 
         // Инициализация Retrofit и сервиса
         userService = RetroFit.getClient().create(IUser.class);
@@ -44,6 +46,8 @@ public class RegistrationActivity2 extends AppCompatActivity {
         password = intent.getStringExtra("password");
         name = intent.getStringExtra("name");
         surname = intent.getStringExtra("surname");
+
+        Log.d(TAG, "onCreate: Received data - login: " + login + ", name: " + name + ", surname: " + surname);
 
         ImageButton selectAgeButton = findViewById(R.id.idSelectAgeButton);
         SeekBar seekBarHeight = findViewById(R.id.seekBarHeight);
@@ -60,8 +64,10 @@ public class RegistrationActivity2 extends AppCompatActivity {
         int defaultDay = defaultCalendar.get(Calendar.DAY_OF_MONTH);
 
         ageValueText.setText(defaultDay + "-" + (defaultMonth + 1) + "-" + defaultYear);
+        Log.d(TAG, "onCreate: Set default date: " + ageValueText.getText());
 
         selectAgeButton.setOnClickListener(v -> {
+            Log.d(TAG, "selectAgeButton: Date picker button clicked");
             final Calendar c = Calendar.getInstance();
 
             int year = c.get(Calendar.YEAR);
@@ -74,7 +80,8 @@ public class RegistrationActivity2 extends AppCompatActivity {
 
             @SuppressLint("SetTextI18n") DatePickerDialog datePickerDialog = new DatePickerDialog
                     (RegistrationActivity2.this, R.style.CustomDatePickerDialog,
-                            (view, year1, monthOfYear, dayOfMonth) -> ageValueText.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year1),
+                            (view, year1, monthOfYear, dayOfMonth) ->
+                                    ageValueText.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year1),
                             year, month, day);
             // Установить максимальную дату для выбора
             datePickerDialog.getDatePicker().setMaxDate(today);
@@ -118,11 +125,13 @@ public class RegistrationActivity2 extends AppCompatActivity {
     }
 
     public void RegistrationBack1(View v) {
+        Log.d(TAG, "RegistrationBack1: Going back to RegistrationActivity");
         Intent intent = new Intent(RegistrationActivity2.this, RegistrationActivity.class);
         startActivity(intent);
     }
 
     public void ReturnAutorization(View v) {
+        Log.d(TAG, "ReturnAutorization: Attempting to register user");
         TextView ageValueText = findViewById(R.id.idAgeValueText);
         TextView textViewValueHeight = findViewById(R.id.seekBarHeightValue);
         TextView textViewValueWeight = findViewById(R.id.seekBarWeightValue);
@@ -134,10 +143,13 @@ public class RegistrationActivity2 extends AppCompatActivity {
 
         RadioButton radioFemale = findViewById(R.id.radioFemale);
         boolean gender = radioFemale.isChecked(); // Если выбран женский пол, то gender = true, иначе false
+        Log.d(TAG, "ReturnAutorization: gender selected - " + (gender ? "female" : "male"));
 
         if (age.isEmpty() || height.isEmpty() || weight.isEmpty()) {
+            Log.w(TAG, "ReturnAutorization: Empty fields detected");
             Toast.makeText(this, "Пожалуйста, заполните все поля", Toast.LENGTH_SHORT).show();
         } else {
+            Log.d(TAG, "ReturnAutorization: All fields filled, creating UserRegister object");
             UserRegister userRegister = new UserRegister(
                     login,
                     password,
@@ -154,22 +166,25 @@ public class RegistrationActivity2 extends AppCompatActivity {
     }
 
     private void registerUser(UserRegister userRegister) {
+        Log.d(TAG, "registerUser: Attempting to register user");
         Call<User> call = userService.registerUser(userRegister);
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
+                    Log.d(TAG, "onResponse: Registration successful");
                     Toast.makeText(RegistrationActivity2.this, "Регистрация завершена", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(RegistrationActivity2.this, MainActivity.class);
                     startActivity(intent);
                 } else {
+                    Log.e(TAG, "onResponse: Registration failed. Code: " + response.code());
                     Toast.makeText(RegistrationActivity2.this, "Регистрация неуспешная", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                Log.e("RegistrationActivity2", "Network error: " + t.getMessage());
+                Log.e(TAG, "onFailure: Network error during registration", t);
                 Toast.makeText(RegistrationActivity2.this, "Ошибка сети: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

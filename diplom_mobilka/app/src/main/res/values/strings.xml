@@ -14,6 +14,7 @@
     <string name="zareg">"Зарегистрироваться"</string>
     <string name="enter">"Войти"</string>
     <string name="passwordText">"Пароль"</string>
+    <string name="passwordText11">"Актуальный пароль"</string>
     <string name="passwordNextText">"Новый пароль"</string>
     <string name="login">"Логин"</string>
     <string name="createProfile">"Создать учетную запись"</string>
